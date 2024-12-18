@@ -69,14 +69,14 @@ const WorkflowCreator = () => {
     // const [workflowXml, setWorkflowXml] = useState(null);
     const [bpmnXml, setBpmnXml] = useState('');
   
-    // const handleGenerate = () => {
-    //   const xml = generateWorkflow(query);
-    //   if (xml) {
-    //     setWorkflowXml(xml);
-    //   } else {
-    //     alert("No matching workflow found. Please refine your query.");
-    //   }
-    // };
+    const handleGenerate = () => {
+      const xml = generateWorkflow(query);
+      if (xml) {
+        setWorkflowXml(xml);
+      } else {
+        alert("No matching workflow found. Please refine your query.");
+      }
+    };
   
     const handleBpmnGenerated = (bpmnStructure) => {
       // Convert the parsed structure to BPMN XML (dummy example)
