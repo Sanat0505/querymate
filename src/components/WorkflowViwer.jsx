@@ -1,34 +1,31 @@
-import React, { useEffect } from 'react';
-import BpmnJS from 'bpmn-js/lib/Modeler';
+import React, { useEffect, useRef } from 'react';
+import BpmnModeler from 'bpmn-js/lib/Modeler';
 
-const WorkflowViewer = ({ bpmnXML }) => {
+const WorkflowViewer = ({ bpmnXml }) => {
+  const modelerRef = useRef();
+
   useEffect(() => {
-    const container = document.getElementById('bpmn-container');
-    const viewer = new BpmnJS({ container });
+    if (!bpmnXml) return;
 
-    const loadBpmnDiagram = async () => {
-      try {
-        await viewer.importXML(bpmnXML);
-        console.log('BPMN diagram rendered successfully.');
-      } catch (err) {
-        console.error('Error loading BPMN 2.0 XML', err);
-        alert('Failed to render BPMN diagram. Please check the XML.');
+    // Initialize the BPMN modeler
+    const modeler = new BpmnModeler({ container: '#bpmn-container' });
+    modelerRef.current = modeler;
+
+    // Import the BPMN XML
+    modeler.importXML(bpmnXml, (err) => {
+      if (err) {
+        console.error('Error importing BPMN XML:', err);
+      } else {
+        console.log('BPMN diagram rendered successfully!');
       }
-    };
+    });
 
-    loadBpmnDiagram();
-
-    // Cleanup viewer instance on component unmount
     return () => {
-      viewer.destroy();
+      modelerRef.current?.destroy();
     };
-  }, [bpmnXML]);
+  }, [bpmnXml]);
 
-  return (
-    <div id="bpmn-container" style={{ width: '100%', height: '500px', border: '1px solid #ccc' }}>
-      {!bpmnXML && <p className="text-gray-600 text-center mt-4">No BPMN diagram to display.</p>}
-    </div>
-  );
+  return <div id="bpmn-container" style={{ width: '100%', height: '500px', border: '1px solid #ccc' }} />;
 };
 
 export default WorkflowViewer;

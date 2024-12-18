@@ -23,15 +23,15 @@ const SubmitQueryTab = () => {
     setTypingAnswer("");
 
     try {
-      // const chatCompletion = await client.chatCompletion({
-      //   model: "NousResearch/Hermes-3-Llama-3.1-8B",
-      //   messages: [{ role: "user", content:  `Classify this query as "Automated" or "Escalated": ${query}` }],
-      //   max_tokens: 500,
-      // });
+      const chatCompletion = await client.chatCompletion({
+        model: "NousResearch/Hermes-3-Llama-3.1-8B",
+        messages: [{ role: "user", content:  `Convert this process description into structured BPMN elements:: ${query}` }],
+        max_tokens: 500,
+      });
 
-      // const generatedAnswer = chatCompletion.choices[0].message.content.trim();
-      // setAnswer(generatedAnswer);
-      // console.log("chatCompletion",chatCompletion)
+      const generatedAnswer = chatCompletion.choices[0].message.content.trim();
+      setAnswer(generatedAnswer);
+      console.log("chatCompletion",chatCompletion)
 
       // Start typing effect with the updated logic
       // startTypewritingEffect(generatedAnswer);
