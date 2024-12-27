@@ -25,7 +25,7 @@ const SubmitQueryTab = () => {
     try {
       const chatCompletion = await client.chatCompletion({
         model: "NousResearch/Hermes-3-Llama-3.1-8B",
-        messages: [{ role: "user", content:  `Convert this process description into structured BPMN elements:: ${query}` }],
+        messages: [{ role: "user", content:  `${query}` }],
         max_tokens: 500,
       });
 

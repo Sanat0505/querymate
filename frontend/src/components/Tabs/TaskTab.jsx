@@ -83,18 +83,18 @@ const Tasks = () => {
   // Static data for demonstration
   const tasks = [
     {
-      id: "TASK-001",
+      id: "TASK_001",
       name: "Review Address Update Request",
-      workflowId: "WF-12345",
-      assignee: "Admin1",
-      dueDate: "2024-12-09T17:00:00",
+      workflowId: "WF-1",
+      assignee: "Sanat",
+      dueDate: "2024-12-15T17:40:00",
     },
     {
-      id: "TASK-002",
+      id: "TASK_002",
       name: "Resolve Login Issue",
-      workflowId: "WF-12346",
-      assignee: "Admin2",
-      dueDate: "2024-12-09T18:00:00",
+      workflowId: "WF-2",
+      assignee: "Kakadiya",
+      dueDate: "2024-12-15T18:00:00",
     },
   ];
 

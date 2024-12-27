@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UsersIcon, ChartBarIcon, ClipboardListIcon, CogIcon, CalendarIcon, BookOpenIcon, InformationCircleIcon } from '@heroicons/react/solid';
+import { UsersIcon, ChartBarIcon, ClipboardListIcon, CogIcon, CalendarIcon, BookOpenIcon, LightBulbIcon } from '@heroicons/react/solid';
 import UserManagement from '../components/Tabs/UserManagement';
 import Analytics from '../components/Tabs/Analytics';
 import ActivityLogs from '../components/Tabs/ActivityLogs';
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
             } hover:text-primary-700 dark:hover:text-primary-200 cursor-pointer`}
             onClick={() => setActiveTab('create')}
           >
-            <InformationCircleIcon className="w-5 h-5 mr-2" />
+            <LightBulbIcon className="w-5 h-5 mr-2" />
             Create Workflows
           </li>
           <li

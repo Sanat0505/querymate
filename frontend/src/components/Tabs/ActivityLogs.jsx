@@ -5,23 +5,23 @@ const ActivityLogs = () => {
   const logs = [
     {
       id: 1,
-      timestamp: '2024-12-07 14:30:00',
-      user: 'John Doe',
-      action: 'Deleted user #123',
+      timestamp: '2024-12-14 14:30:00',
+      user: 'Sanat Kakadiya',
+      action: 'Deleted user #1',
       details: 'IP: 192.168.1.1',
     },
     {
       id: 2,
-      timestamp: '2024-12-07 13:45:00',
-      user: 'Jane Smith',
+      timestamp: '2024-12-15 13:45:00',
+      user: 'Sanat Kakadiya',
       action: 'Updated site settings',
       details: 'IP: 192.168.1.2',
     },
     {
       id: 3,
-      timestamp: '2024-12-07 12:20:00',
-      user: 'Admin Bot',
-      action: 'Added a new user #456',
+      timestamp: '2024-12-15 12:20:00',
+      user: 'Kakadiya',
+      action: 'Added a new user #10',
       details: 'IP: 192.168.1.3',
     },
   ];
@@ -36,7 +36,7 @@ const ActivityLogs = () => {
               <th className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Timestamp</th>
               <th className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">User</th>
               <th className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Action</th>
-              <th className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Details</th>
+              {/* <th className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-left text-gray-600 dark:text-gray-300">Details</th> */}
             </tr>
           </thead>
           <tbody>
@@ -45,7 +45,7 @@ const ActivityLogs = () => {
                 <td className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{log.timestamp}</td>
                 <td className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{log.user}</td>
                 <td className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{log.action}</td>
-                <td className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{log.details}</td>
+                {/* <td className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">{log.details}</td> */}
               </tr>
             ))}
           </tbody>
