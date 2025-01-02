@@ -1,51 +1,52 @@
 import React, { useEffect, useRef } from "react";
 import BpmnModeler from "bpmn-js/lib/Modeler";
+import ReactBpmn from "react-bpmn";
+import BpmnView from "./BpmnView";
 
-const generateBpmnXml = (bpmnStructure) => {
-  const { elements, connections } = bpmnStructure;
+// const generateBpmnXml = (bpmnStructure) => {
+//   const { elements, connections } = bpmnStructure;
 
-  const elementsXml = elements
-    .map((el) => {
-      if (el.type === "startEvent") {
-        return `<bpmn:startEvent id="${el.name.replace(/\s+/g, "_")}" name="${el.name}" />`;
-      } else if (el.type === "task") {
-        return `<bpmn:task id="${el.name.replace(/\s+/g, "_")}" name="${el.name}" />`;
-      } else if (el.type === "endEvent") {
-        return `<bpmn:endEvent id="${el.name.replace(/\s+/g, "_")}" name="${el.name}" />`;
-      }
-      return "";
-    })
-    .join("\n");
+//   const elementsXml = elements
+//     .map((el) => {
+//       if (el.type === "startEvent") {
+//         return `<bpmn:startEvent id="${el.name.replace(/\s+/g, "_")}" name="${el.name}" />`;
+//       } else if (el.type === "task") {
+//         return `<bpmn:task id="${el.name.replace(/\s+/g, "_")}" name="${el.name}" />`;
+//       } else if (el.type === "endEvent") {
+//         return `<bpmn:endEvent id="${el.name.replace(/\s+/g, "_")}" name="${el.name}" />`;
+//       }
+//       return "";
+//     })
+//     .join("\n");
 
-  const connectionsXml = connections
-    .map((conn) => {
-      return `<bpmn:sequenceFlow id="${conn.source.replace(/\s+/g, "_")}_to_${conn.target.replace(
-        /\s+/g,
-        "_"
-      )}" sourceRef="${conn.source.replace(/\s+/g, "_")}" targetRef="${conn.target.replace(/\s+/g, "_")}" />`;
-    })
-    .join("\n");
+//   const connectionsXml = connections
+//     .map((conn) => {
+//       return `<bpmn:sequenceFlow id="${conn.source.replace(/\s+/g, "_")}_to_${conn.target.replace(
+//         /\s+/g,
+//         "_"
+//       )}" sourceRef="${conn.source.replace(/\s+/g, "_")}" targetRef="${conn.target.replace(/\s+/g, "_")}" />`;
+//     })
+//     .join("\n");
 
-  return `
-    <?xml version="1.0" encoding="UTF-8"?>
-    <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
-                      xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-                      xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-                      xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      id="Definitions_1">
-      <bpmn:process id="Process_1" isExecutable="true">
-        ${elementsXml}
-        ${connectionsXml}
-      </bpmn:process>
-    </bpmn:definitions>
-  `;
-};
+//   return `
+//     <?xml version="1.0" encoding="UTF-8"?>
+//     <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+//                       xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+//                       xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+//                       xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+//                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+//                       id="Definitions_1">
+//       <bpmn:process id="Process_1" isExecutable="true">
+//         ${elementsXml}
+//         ${connectionsXml}
+//       </bpmn:process>
+//     </bpmn:definitions>
+//   `;
+// };
 
 
 const WorkflowCreator = () => {
-  const modelerRef = useRef();
-  // const modeler = new BpmnModeler({ container: "#bpmn-container" });
+  // const modelerRef = useRef();
 
   // Example BPMN structure
   const bpmnStructure = {
@@ -69,30 +70,7 @@ const WorkflowCreator = () => {
   };
 
   // Generate BPMN XML from the structure
-  const bpmnXml = generateBpmnXml(bpmnStructure);
-
-  // useEffect(() => {
-  //   const modeler = new BpmnModeler({ container: "#bpmn-container" });
-  //   modelerRef.current = modeler;
-  
-  //   console.log("Generated BPMN XML:", bpmnXml);
-  
-  //   modeler.importXML(bpmnXml, (err) => {
-  //     if (err) {
-  //       console.error("Error rendering BPMN diagram:", err.message, err);
-  //     } else {
-  //       console.log("BPMN diagram rendered successfully!");
-  //     }
-  //   });
-  
-  //   return () => {
-  //     modelerRef.current?.destroy();
-  //   };
-  // }, [bpmnXml]);
-
-  const generateWorkflow = () => {
-    console.log("Generating....")
-  }
+  // const bpmnXml = generateBpmnXml(bpmnStructure);
 
   return (
     <div>
@@ -106,7 +84,7 @@ const WorkflowCreator = () => {
         ></textarea>
         <button
           // type="submit"
-          onClick={generateWorkflow}
+          // onClick={generateWorkflow}
           className="mt-4 w-full bg-primary-600 text-white hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-800 rounded-lg py-2 text-center"
           // disabled={isLoading} // Disable button while loading
         >
@@ -115,7 +93,7 @@ const WorkflowCreator = () => {
         </button>
         {/* </form> */}
         <div
-        id="bpmn-container"
+        // id="bpmn-container"
         style={{
           width: "100%",
           height: "500px",
@@ -123,7 +101,15 @@ const WorkflowCreator = () => {
           borderRadius: "4px",
           marginTop:"10px"
         }}
-      />
+      >
+      {/* <ReactBpmn 
+      url="./pizzaDiagram.bpmn"
+      onShown={onShown}
+      onLoading={onLoading}
+      onError={onError}
+      /> */}
+      <BpmnView />
+      </div>
     </div>
   );
 };

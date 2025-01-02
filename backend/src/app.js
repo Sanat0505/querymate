@@ -4,7 +4,7 @@ const userRoutes = require("./routes/userRoutes");
 const queryRoutes = require("./routes/queryRoutes");
 
 const app = express();
-
+app.options('*', cors());
 // Middleware
 app.use(express.json());
 app.use(cors());

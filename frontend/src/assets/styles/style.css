@@ -1,0 +1,28 @@
+#js-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+#propview {
+  width: 100%;
+  position: relative;
+  right: 0;
+  top: 0;
+  /* height: 100%; */
+  overflow: auto;
+  background-color: #f8f8f8;
+}
+#js-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+#propview {
+  width: 100%;
+  position: relative;
+  right: 0;
+  top: 0;
+  /* height: 100%; */
+  overflow: auto;
+  background-color: #f8f8f8;
+}
