@@ -1,38 +1,114 @@
-const generateWorkflow = (query) => {
-    if (query.toLowerCase().includes("onboarding")) {
-      return `
-        <?xml version="1.0" encoding="UTF-8"?>
-        <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definition_1">
-          <process id="OnboardingProcess" isExecutable="true">
-            <startEvent id="StartEvent_1" name="Start Onboarding"/>
-            <sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_1"/>
-            <task id="Task_1" name="Verify Documents"/>
-            <sequenceFlow id="Flow_2" sourceRef="Task_1" targetRef="EndEvent_1"/>
-            <endEvent id="EndEvent_1" name="Onboarding Complete"/>
-          </process>
-          <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-            <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="OnboardingProcess">
-              <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
-                <dc:Bounds x="173" y="102" width="36" height="36"/>
-              </bpmndi:BPMNShape>
-              <bpmndi:BPMNShape id="Task_1_di" bpmnElement="Task_1">
-                <dc:Bounds x="260" y="80" width="100" height="80"/>
-              </bpmndi:BPMNShape>
-              <bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_1">
-                <dc:Bounds x="400" y="102" width="36" height="36"/>
-              </bpmndi:BPMNShape>
-              <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
-                <di:waypoint x="209" y="120"/>
-                <di:waypoint x="260" y="120"/>
-              </bpmndi:BPMNEdge>
-              <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
-                <di:waypoint x="360" y="120"/>
-                <di:waypoint x="400" y="120"/>
-              </bpmndi:BPMNEdge>
-            </bpmndi:BPMNPlane>
-          </bpmndi:BPMNDiagram>
-        </definitions>`;
+export const generateBPMNXML = (processDescription) => {
+  const bpmnHeader = `<?xml version="1.0" encoding="UTF-8"?>
+  <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+    id="Definitions_1">
+    <bpmn:process id="Process_1" isExecutable="true">`;
+
+  const bpmnFooter = `
+    </bpmn:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+      <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+        ${generateDiagramElements(processDescription)}
+      </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+  </bpmn:definitions>`;
+
+  const bpmnElements = processDescription.elements.map((element, index) => {
+    const id = `${element.type}_${index + 1}`;
+    const flowId = `Flow_${index + 1}`;
+    
+    switch (element.type) {
+      case 'startEvent':
+        return `
+        <bpmn:startEvent id="${id}" name="${element.name}">
+          <bpmn:outgoing>${flowId}</bpmn:outgoing>
+        </bpmn:startEvent>`;
+        
+      case 'task':
+        return `
+        <bpmn:task id="${id}" name="${element.name}">
+          <bpmn:incoming>Flow_${index}</bpmn:incoming>
+          <bpmn:outgoing>${flowId}</bpmn:outgoing>
+        </bpmn:task>`;
+        
+      case 'exclusiveGateway':
+      case 'parallelGateway':
+      case 'inclusiveGateway':
+        return `
+        <bpmn:${element.type} id="${id}" name="${element.name}">
+          <bpmn:incoming>Flow_${index}</bpmn:incoming>
+          ${element.outgoing.map(out => `<bpmn:outgoing>Flow_${out}</bpmn:outgoing>`).join('\n')}
+        </bpmn:${element.type}>`;
+        
+      case 'subProcess':
+        return `
+        <bpmn:subProcess id="${id}" name="${element.name}">
+          ${element.elements.map((subElement, subIndex) => `
+            <bpmn:task id="${id}_SubTask_${subIndex + 1}" name="${subElement.name}" />
+          `).join('')}
+        </bpmn:subProcess>`;
+        
+      case 'endEvent':
+        return `
+        <bpmn:endEvent id="${id}" name="${element.name}">
+          <bpmn:incoming>Flow_${index}</bpmn:incoming>
+        </bpmn:endEvent>`;
+        
+      default:
+        return '';
     }
-    return null;
-  };
-  
+  }).join('');
+
+  const sequenceFlows = processDescription.sequenceFlows.map((flow, index) => {
+    return `<bpmn:sequenceFlow id="Flow_${index + 1}" sourceRef="${processDescription.elements[flow.sourceRef]}_${flow.sourceRef + 1}" targetRef="${processDescription.elements[flow.targetRef]}_${flow.targetRef + 1}" />`;
+  }).join('');
+
+  return `${bpmnHeader}${bpmnElements}${sequenceFlows}${bpmnFooter}`;
+}
+
+function generateDiagramElements(processDescription) {
+  const shapes = processDescription.elements.map((element, index) => {
+    const id = `${element.type}_${index + 1}`;
+    const x = 150 + index * 150; // Dynamic X position based on index
+    const y = 100; // Fixed Y position for simplicity
+    return `
+      <bpmndi:BPMNShape id="${id}_di" bpmnElement="${id}">
+        <dc:Bounds x="${x}" y="${y}" width="100" height="80" />
+      </bpmndi:BPMNShape>`;
+  }).join('');
+
+  const edges = processDescription.sequenceFlows.map((flow, index) => {
+    const sourceIndex = flow.sourceRef;
+    const targetIndex = flow.targetRef;
+    return `
+      <bpmndi:BPMNEdge id="Flow_${index + 1}_di" bpmnElement="Flow_${index + 1}">
+        <di:waypoint x="${150 + sourceIndex * 150 + 100}" y="140" />
+        <di:waypoint x="${150 + targetIndex * 150}" y="140" />
+      </bpmndi:BPMNEdge>`;
+  }).join('');
+
+  return `${shapes}${edges}`;
+}
+
+// Example Usage:
+// const processDescription = {
+//   elements: [
+//     { type: 'startEvent', name: 'Start' },
+//     { type: 'task', name: 'Task 1', taskType: 'user' },
+//     { type: 'exclusiveGateway', name: 'Decision', outgoing: [3, 4] },
+//     { type: 'task', name: 'Task A', taskType: 'manual' },
+//     { type: 'task', name: 'Task B', taskType: 'user' },
+//     { type: 'endEvent', name: 'End' }
+//   ],
+//   sequenceFlows: [
+//     { sourceRef: 0, targetRef: 1 },
+//     { sourceRef: 1, targetRef: 2 },
+//     { sourceRef: 2, targetRef: 3 },
+//     { sourceRef: 2, targetRef: 4 },
+//     { sourceRef: 3, targetRef: 5 },
+//     { sourceRef: 4, targetRef: 5 }
+//   ]
+// };

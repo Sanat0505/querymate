@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 let initialState = {
   userData: [],
-  refresh: false
+  refresh: false,
+  bpmnXml: [],
 };
 
 export const DataSlice = createSlice({
@@ -19,9 +20,12 @@ export const DataSlice = createSlice({
         setRefresh: (data, action) => {
             data.refresh = action.payload
         },
+        setBpmnXml: (data, action) => {
+            data.bpmnXml = action.payload
+        },
     }
 })
 
 
-export const { userData, setRefresh } = DataSlice.actions;
+export const { userData, setRefresh, setBpmnXml } = DataSlice.actions;
 export default DataSlice.reducer;
