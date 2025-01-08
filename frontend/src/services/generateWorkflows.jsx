@@ -1,4 +1,5 @@
 export const generateBPMNXML = (processDescription) => {
+  console.log("xmlllll",processDescription)
   const bpmnHeader = `<?xml version="1.0" encoding="UTF-8"?>
   <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
     xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
@@ -63,8 +64,13 @@ export const generateBPMNXML = (processDescription) => {
   }).join('');
 
   const sequenceFlows = processDescription.sequenceFlows.map((flow, index) => {
-    return `<bpmn:sequenceFlow id="Flow_${index + 1}" sourceRef="${processDescription.elements[flow.sourceRef]}_${flow.sourceRef + 1}" targetRef="${processDescription.elements[flow.targetRef]}_${flow.targetRef + 1}" />`;
+    if (!processDescription.elements[flow.sourceRef] || !processDescription.elements[flow.targetRef]) {
+      console.error("Invalid flow reference:", flow);
+      return ''; // Skip invalid flows
+    }
+    return `<bpmn:sequenceFlow id="Flow_${index + 1}" sourceRef="${processDescription.elements[flow.sourceRef].type}_${flow.sourceRef + 1}" targetRef="${processDescription.elements[flow.targetRef].type}_${flow.targetRef + 1}" />`;
   }).join('');
+  
 
   return `${bpmnHeader}${bpmnElements}${sequenceFlows}${bpmnFooter}`;
 }

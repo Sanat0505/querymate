@@ -5,79 +5,7 @@ import BpmnView from "./BpmnView";
 import { HfInference } from "@huggingface/inference";
 import {generateBPMNXML} from "../../services/generateWorkflows"
 import {setBpmnXml} from "../../store/DataSlice"
-import { useDispatch, useSelector } from "react-redux";
-
-
-function generateBpmnXmlFromText(description) {
-  // Sample steps extracted from the input description
-  const steps = [
-    { id: "StartEvent_1", type: "startEvent", name: "Start Process" },
-    { id: "Task_1", type: "task", name: "Assign Onboarding Buddy" },
-    { id: "Task_2", type: "task", name: "Schedule Meeting" },
-    { id: "Gateway_1", type: "exclusiveGateway", name: "Check Laptop Requirement" },
-    { id: "Task_3", type: "task", name: "Assign Laptop" },
-    { id: "Task_4", type: "task", name: "Conduct Office Tour" },
-    { id: "EndEvent_1", type: "endEvent", name: "End Process" }
-  ];
-
-  const flows = [
-    { id: "Flow_1", source: "StartEvent_1", target: "Task_1" },
-    { id: "Flow_2", source: "Task_1", target: "Task_2" },
-    { id: "Flow_3", source: "Task_2", target: "Gateway_1" },
-    { id: "Flow_4", source: "Gateway_1", target: "Task_3" },
-    { id: "Flow_5", source: "Gateway_1", target: "Task_4" },
-    { id: "Flow_6", source: "Task_3", target: "Task_4" },
-    { id: "Flow_7", source: "Task_4", target: "EndEvent_1" }
-  ];
-
-  const elementsXml = steps
-    .map((step) => {
-      switch (step.type) {
-        case "startEvent":
-          return `<bpmn:startEvent id="${step.id}" name="${step.name}">
-                    <bpmn:outgoing>Flow_1</bpmn:outgoing>
-                  </bpmn:startEvent>`;
-        case "task":
-          return `<bpmn:task id="${step.id}" name="${step.name}">
-                    <bpmn:incoming>Flow_${steps.indexOf(step)}</bpmn:incoming>
-                    <bpmn:outgoing>Flow_${steps.indexOf(step) + 1}</bpmn:outgoing>
-                  </bpmn:task>`;
-        case "exclusiveGateway":
-          return `<bpmn:exclusiveGateway id="${step.id}" name="${step.name}">
-                    <bpmn:incoming>Flow_${steps.indexOf(step)}</bpmn:incoming>
-                    <bpmn:outgoing>Flow_${steps.indexOf(step) + 1}</bpmn:outgoing>
-                    <bpmn:outgoing>Flow_${steps.indexOf(step) + 2}</bpmn:outgoing>
-                  </bpmn:exclusiveGateway>`;
-        case "endEvent":
-          return `<bpmn:endEvent id="${step.id}" name="${step.name}">
-                    <bpmn:incoming>Flow_${steps.indexOf(step)}</bpmn:incoming>
-                  </bpmn:endEvent>`;
-        default:
-          return "";
-      }
-    })
-    .join("\n");
-
-  const flowsXml = flows
-    .map(
-      (flow) =>
-        `<bpmn:sequenceFlow id="${flow.id}" sourceRef="${flow.source}" targetRef="${flow.target}" />`
-    )
-    .join("\n");
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-  <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-    id="Definitions_1">
-    <bpmn:process id="Process_1" isExecutable="true">
-      ${elementsXml}
-      ${flowsXml}
-    </bpmn:process>
-  </bpmn:definitions>`;
-}
-
+// import { useDispatch, useSelector } from "react-redux";
 
 const WorkflowCreator = () => {
   // const modelerRef = useRef();
@@ -85,9 +13,10 @@ const WorkflowCreator = () => {
   const [messages, setMessages] = useState([]); // Chat messages
   const [botMessage, setBotMessage] = useState(""); 
   const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [bpmnXml, setBpmnXml] = useState(""); // Loading state
   const chatEndRef = useRef(null);
-  const bpmnXml = useSelector((state) => state.data.bpmnXml);
-  const dispatch = useDispatch();
+  // const bpmnXml = useSelector((state) => state.data.bpmnXml);
+  // const dispatch = useDispatch();
 
   const client = new HfInference("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");
 
@@ -130,7 +59,7 @@ Example of the required JSON output format:
     { "sourceRef": 4, "targetRef": 5 }
   ]
 }
-${bpmnDesc}` };
+: ${bpmnDesc}` };
     setMessages((prev) => [...prev, userMessage]);
     setBpmnDesc("");
     setIsLoading(true);
@@ -144,10 +73,10 @@ ${bpmnDesc}` };
 
       const generatedAnswer = chatCompletion.choices[0].message.content.trim();
       const botMessage = { role: "bot", content: generatedAnswer };
-      
       setMessages((prev) => [...prev, botMessage]);
-      setBotMessage(botMessage.content)
-      console.log("botMsg",botMessage.content)
+      setBotMessage(JSON.parse(botMessage.content))
+      setBpmnXml(generateBPMNXML(JSON.parse(generatedAnswer)));
+      console.log("bpmnXml",bpmnXml)
     } catch (error) {
       console.error("Error fetching answer:", error.message);
       setMessages((prev) => [
@@ -173,8 +102,10 @@ ${bpmnDesc}` };
 
  const userClick = () => {
   const processDescription = botMessage;
-  dispatch(setBpmnXml(generateBPMNXML(processDescription)));
-  console.log(generateBPMNXML(processDescription));
+  console.log(botMessage)
+  // dispatch(setBpmnXml(generateBPMNXML(processDescription)));
+  // setBpmnXml(generateBPMNXML(botMessage));
+  // console.log(generateBPMNXML(botMessage));
  }
 
   return (
@@ -247,7 +178,7 @@ ${bpmnDesc}` };
           marginTop:"10px"
         }}
       >
-      <BpmnView />
+      <BpmnView bpmnXml={bpmnXml}/>
       </div>
     </div>
   );
