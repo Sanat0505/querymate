@@ -1,8 +1,13 @@
 name: Github-Gitlab-Sync
 
 on:
-  - push
-  - delete
+  push:
+    branches:
+       - '*'
+  
+  delete:
+      branches:
+         - '*'
 
 jobs:
   sync:
@@ -12,8 +17,12 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    - name: Gitlab sync
+      env:
+        GITLAB_TOKEN: ${{ secrets.GITLAB_TARGET_TOKEN }}
+
+      run: |
+        git remote add https://oauth2:${{ secrets.GITLAB_TARGET_TOKEN }}@gitlab.hrz.tu-chemnitz.de/vsr/edu/planspiel/ws2425/group11-techblend.git
+        git push gitlab --all
+        git push gitlab --tags
   
-    - uses: wangchucheng/git-repo-sync@v0.1.0
-      with:
-        target-url: ${{ secrets.GITLAB_TARGET_URL }}
-        target-token: ${{ secrets.GITLAB_TARGET_TOKEN }}
