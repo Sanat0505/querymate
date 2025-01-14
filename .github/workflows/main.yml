@@ -22,7 +22,7 @@ jobs:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TARGET_TOKEN }}
 
       run: |
-        git remote add https://oauth2:${{ secrets.GITLAB_TARGET_TOKEN }}@gitlab.hrz.tu-chemnitz.de/vsr/edu/planspiel/ws2425/group11-techblend.git
+        git remote add gitlab https://oauth2:${{ secrets.GITLAB_TARGET_TOKEN }}@gitlab.hrz.tu-chemnitz.de/vsr/edu/planspiel/ws2425/group11-techblend.git
         git push gitlab --all
         git push gitlab --tags
   
