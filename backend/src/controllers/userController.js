@@ -1,7 +1,5 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { jwtSecret } = require("../config/config");
 
 // User Registration
 const registerUser = async (req, res) => {
@@ -21,78 +19,55 @@ const registerUser = async (req, res) => {
     const user = new User({ name, email, password: hashedPassword, role });
     await user.save();
 
+    // Log the saved user for debugging
+    console.log("New user registered:", user); // Log user data after saving
+
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    console.error("Error during user registration:", error); // Log server error details (for debugging)
+    res.status(500).json({ message: "Server error, please try again later." });
   }
 };
 
-// Admin reviews user requests for admin role
-const requestAdminRole = async (req, res) => {
-  const { userId } = req.user;
-  const { requestAdmin } = req.body;
-
-  try {
-    if (requestAdmin) {
-      // Send notification to admin for review
-      sendAdminReviewNotification(userId);
-      res.json({ message: "Request sent for admin review" });
-    } else {
-      res.status(400).json({ message: "Invalid request" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: "Error processing request", error });
-  }
-};
-
-// Function to send admin review notification (mocked for now)
-const sendAdminReviewNotification = (userId) => {
-  console.log(
-    `Sending notification: User with ID ${userId} has requested admin status.`
-  );
-};
-
-// User Login
+// User Login (Simple login without JWT)
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log("request", req);
+
   try {
+    // Find the user by email
     const user = await User.findOne({ email });
-    console.log("user", user);
     if (!user) {
-      return res
-        .status(400)
-        .send({ message: "Invalid credentials... User not found" });
+      return res.status(400).json({ message: "No account found with this email. Please sign up first." });
     }
+
+    // Compare provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(isPasswordValid, "isPasswordValid", "user", user);
-
     if (!isPasswordValid) {
-      return res.status(400).send({
-        message: "Invalid credentials... Please check email or password...",
-      });
+      return res.status(400).json({ message: "Invalid credentials. Please check your email and password." });
     }
 
-    const token = jwt.sign(
-      { id: user._id, name: user.name, email: user.email, role: user.role },
-      jwtSecret,
-      {
-        expiresIn: "1h",
-      }
-    );
-    // console.log("Generated JWT Token:", token);
-    res.json({ token, role: user.role });
+    // Log successful login for debugging
+    console.log("User logged in successfully:", user); // Log user data after successful login
+
+    // Send back user data and role (without using JWT)
+    res.json({ message: "Login successful", user: { name: user.name, email: user.email, role: user.role } });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    console.error("Error during login:", error); // Log server error details (for debugging)
+    res.status(500).json({ message: "Server error, please try again later." });
   }
 };
 
 // Update User Profile
 const updateUser = async (req, res) => {
   const { name, email, password } = req.body;
-  const userId = req.user.id; // Get user ID from the JWT payload
+  const userId = req.user.id; // Get user ID from the request (In your case, you are not using JWT anymore)
 
   try {
+    // Prevent users from updating other users' profiles
+    if (userId !== req.user.id && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
     let updateData = { name, email };
 
     if (password) {
@@ -102,9 +77,7 @@ const updateUser = async (req, res) => {
     }
 
     // Update the user
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-      new: true,
-    });
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
@@ -112,14 +85,21 @@ const updateUser = async (req, res) => {
 
     res.json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
-    res.status(500).json({ message: "Error updating user profile", error });
+    console.error("Error during user update:", error); // Log server error details (for debugging)
+    res.status(500).json({ message: "Error updating user profile, please try again later." });
   }
 };
 
+// Delete User Account
 const deleteUser = async (req, res) => {
-  const userId = req.user.id; // Get user ID from the JWT payload
+  const userId = req.user.id; // Get user ID from the request (If you decide to reimplement JWT)
 
   try {
+    // Prevent users from deleting other users' accounts
+    if (userId !== req.user.id && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
     const user = await User.findByIdAndDelete(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -127,37 +107,43 @@ const deleteUser = async (req, res) => {
 
     res.json({ message: "User deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting user account", error });
+    console.error("Error during account deletion:", error); // Log server error details (for debugging)
+    res.status(500).json({ message: "Error deleting user account, please try again later." });
   }
 };
 
+// Get User Profile
 const getUser = async (req, res) => {
   try {
-    console.log("log id", req.user);
-    const user = await User.findById(req.user.id).select("-password");
-    console.log("user", user);
+    const user = await User.findById(req.user.id).select("name email role"); // Avoid sending password
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Error during fetching user profile:", error); // Log server error details (for debugging)
+    res.status(500).json({ message: "Server error, please try again later." });
   }
 };
 
+// Get All Users (Admin Only)
 const getUsers = async (req, res) => {
   try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden, admin only" });
+    }
+
     const users = await User.find();
     res.json(users);
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch users" });
+    console.error("Error during fetching users:", error); // Log server error details (for debugging)
+    res.status(500).json({ message: "Failed to fetch users, please try again later." });
   }
 };
 
 module.exports = {
   registerUser,
   loginUser,
-  requestAdminRole,
   updateUser,
   deleteUser,
   getUser,
