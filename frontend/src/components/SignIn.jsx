@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { signinApi } from "../services/api";
+import { useNavigate } from "react-router-dom";  // Import useNavigate
 
 const SignIn = () => {
-
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();  // Use useNavigate hook
 
   // Handle input changes
   const handleChange = (e) => {
@@ -19,12 +20,10 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await signinApi(formData);
-      setMessage(`Welcome back, `);
-      // Save token to local storage for authentication
-      localStorage.setItem("token", response.data.token);
+      const response = await signinApi(formData, navigate);  // Pass navigate here
+      setMessage("Welcome back");
     } catch (error) {
-      setMessage(`Error: ${error.response?.data?.message || error.message}`);
+      setMessage(`Error: ${error.message}`);
     }
   };
 
@@ -70,6 +69,7 @@ const SignIn = () => {
       >
         Sign In
       </button>
+      {message && <p className="mt-4 text-sm text-red-500">{message}</p>}
     </form>
   );
 };
