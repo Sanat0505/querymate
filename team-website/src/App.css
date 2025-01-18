@@ -1,0 +1,185 @@
+.App {
+  text-align: center;
+}
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animated-background {
+  background: linear-gradient(
+    270deg,
+    #ff7eb3,
+    #ff758c,
+    #ffb199,
+    #ff6b8a,
+    #c06c84,
+    #355c7d
+  );
+  background-size: 180% 180%;
+  animation: gradientAnimation 15s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-animated {
+  background: linear-gradient(135deg, #007bff, #1a1a1a);
+  background-size: 200% 200%;
+  animation: gradient 10s ease-in-out infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Set perspective for the flip effect */
+.perspective {
+  perspective: 1000px;
+}
+
+/* Container for 3D transform */
+.card-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Rotate the card when flipped */
+.card-container.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Hide back face initially */
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Position both sides */
+.card-side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+}
+
+/* Styling for the front */
+.card-front {
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+/* Styling for the back */
+.card-back {
+  background: #1f2937;
+  color: white;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* App.css */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header,
+.team-card {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.header {
+  animation-delay: 0.2s;
+}
+
+.team-card:nth-child(even) {
+  animation-delay: 0.3s;
+}
+.team-card:nth-child(odd) {
+  animation-delay: 0.5s;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+.team-card {
+  transition: all 0.3s ease-in-out;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
