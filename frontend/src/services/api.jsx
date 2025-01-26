@@ -61,6 +61,95 @@ export const signinApi = async (formData, navigate) => {
   }
 };
 
+
+
+// Update User Profile API call 
+export const updateUserApi = async (userData) => {
+  try {
+    // Retrieve the user data from localStorage
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!storedUser || !storedUser.name) {
+      throw new Error("User name is missing from localStorage");
+    }
+
+    // Ensure userData contains the correct fields
+    const { name, newName, email, password } = userData;
+
+    // Construct the request data
+    const requestData = {
+      name: storedUser.name,  // Current name from localStorage
+      newName: newName,       // New name (if provided)
+      email: email,
+      password: password,
+    };
+
+    // PUT request to update the user profile
+    const response = await apiClient.put("/querymate/auth/update", requestData, {
+      withCredentials: true,  // Send credentials if needed
+    });
+
+    console.log("Update Response:", response.data);  // Log the response for debugging
+    return response.data;  // Return the updated user data
+  } catch (error) {
+    console.error("Error in updateUserApi:", error.message);
+    handleError(error);  // Centralized error handling
+  }
+};
+
+
+// Delete User API call 
+export const deleteUserApi = async (name) => {
+  try {
+    if (!name) {
+      throw new Error("User name is required to delete a user."); // Validation in case name is missing
+    }
+
+    // DELETE request to the backend
+    const response = await apiClient.delete("/querymate/auth/delete", {
+      data: { name }, // Pass name in the request body (as required by your backend)
+    });
+
+    console.log("Delete Response:", response.data); // Log success
+    return response.data; // Return confirmation of deletion
+
+  } catch (error) {
+    console.error("Error in deleteUserApi:", error.message);
+    handleError(error); // Centralized error handling
+  }
+};
+
+// Get User API call 
+export const getUserApi = async (name) => {
+  try {
+    if (!name) {
+      throw new Error("User name is required to fetch user data."); // Validation in case name is missing
+    }
+
+    // POST request to fetch user data by name
+    const response = await apiClient.post("/querymate/auth/", { name });
+
+    console.log("Get User Response:", response.data); // Log the fetched user data
+    return response.data; // Return the fetched user data
+
+  } catch (error) {
+    console.error("Error in getUserApi:", error.message);
+    handleError(error); // Centralized error handling
+  }
+};
+
+// Get All Users API call
+export const getUsersApi = async () => {
+  try {
+    // GET request to fetch all users
+    const response = await apiClient.get("/querymate/auth/users");
+    console.log("Get Users Response:", response.data); // Log all users
+    return response.data; // Return the list of users
+  } catch (error) {
+    console.error("Error in getUsersApi:", error.message);
+    handleError(error); // Centralized error handling
+  }
+};
 // Submit Query API call
 export const submitQueryApi = async (query) => {
   try {

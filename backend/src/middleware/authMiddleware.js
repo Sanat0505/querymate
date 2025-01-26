@@ -34,40 +34,31 @@
 
 // module.exports = authMiddleware;
 
-const jwt = require("jsonwebtoken");
-const config = require("../config/config");
+// authMiddleware.js
 
+// Middleware for handling authentication and CORS settings
 const authMiddleware = (req, res, next) => {
+  // Set CORS headers to allow specific origins and methods
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://tb-querymate.vercel.app, http://localhost:3000/"
+    "https://tb-querymate.vercel.app, http://localhost:3000"
   );
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
+  // Handle preflight OPTIONS requests
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
-  const authHeader = req.headers["authorization"];
-  if (!authHeader) {
-    return res.status(401).json({ message: "Authorization header missing" });
+  // Check if the session exists and user is authenticated
+  if (req.session && req.session.user) {
+    req.user = req.session.user; // Attach user data to the request object
+    return next(); // Proceed to the next middleware or route handler
   }
 
-  const token = authHeader.split(" ")[1]; // Extract the token from the 'Bearer <token>' format
-  if (!token) {
-    return res.status(403).json({ message: "No token provided" });
-  }
-
-  jwt.verify(token, config.jwtSecret, (err, decoded) => {
-    if (err) {
-      console.log("errorNNN", token);
-      return res.status(401).json({ message: "Invalid or expired token" });
-    }
-
-    req.user = decoded; // Attach decoded token data to req
-    next();
-  });
+  // If the user is not authenticated, return an error response
+  return res.status(401).json({ message: "Unauthorized. Please log in." });
 };
 
 module.exports = authMiddleware;

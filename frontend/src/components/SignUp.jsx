@@ -20,12 +20,12 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload on form submission
     try {
-      const response = await signUpApi(formData); // Make API request
+      const response = await signUpApi(formData, navigate); // Make API request, pass navigate for redirection
       console.log("response", response);
       setMessage(`Success: ${response.message || "Signup successful!"}`);
-
-      // Redirect to the user dashboard after successful signup
-      navigate("/dashboard"); // Replace '/userdashboard' with your actual route
+      
+      // You don't need to manually navigate here because it's handled inside signUpApi.
+      // navigate("/dashboard"); // Remove redundant navigation, handled in the signUpApi function
     } catch (error) {
       // Handle error response (e.g., show error message)
       setMessage(`Error: ${error.response?.data?.message || error.message || "Something went wrong!"}`);

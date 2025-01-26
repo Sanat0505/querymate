@@ -4,7 +4,7 @@ import "./App.css";
 import LandingPage from "./pages/LandingPage";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
-import SignUp from "./components/SignUp"; // Updated import path
+import SignUp from "./components/SignUp"; 
 import SignIn from "./components/SignIn";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/SignUp" element={<SignUp />} /> {/* Added SignUp route */}
+        <Route path="/SignUp" element={<SignUp />} /> 
         <Route path="/SignIn" element={<SignIn />} /> 
       </Routes>
     </Router>

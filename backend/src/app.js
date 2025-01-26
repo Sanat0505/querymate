@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
+const session = require("express-session");
 const userRoutes = require("./routes/userRoutes");
 const queryRoutes = require("./routes/queryRoutes");
 
@@ -13,10 +15,20 @@ const corsOptions = {
   credentials: true, // Allow sending cookies and JWT tokens with requests
   // preflightContinue: false, // Whether to pass the preflight request to the next handler
   // optionsSuccessStatus: 204, // The status code for successful OPTIONS requests
-};
 
+};
 // Apply CORS middleware globally
 app.use(cors(corsOptions));
+
+// Session setup for session-based authentication
+app.use(
+  session({
+    secret: "your-secret-key", // Secret key for encrypting session data
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set to true for production (ensure HTTPS)
+  })
+);
 
 // Middleware
 app.use(express.json()); // Parse incoming JSON requests
