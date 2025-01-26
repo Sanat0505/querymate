@@ -7,7 +7,7 @@ const SubmitQueryTab = () => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const client = new HfInference("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");
+  const client = new HfInference(`${process.env.REACT_APP_HFINTERFACETOKEN}`);
 
   const userSubmit = async (e) => {
     e.preventDefault();
