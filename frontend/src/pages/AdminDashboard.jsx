@@ -8,6 +8,7 @@ import ActiveWorkflows from '../components/Tabs/ActiveWorkflows';
 import Tasks from '../components/Tabs/TaskTab';
 import DeployedWorkflows from '../components/Tabs/DeployedWorkflows';
 import WorkflowCreator from '../components/Tabs/CreateWorkflow';
+import Avatar, { genConfig } from "react-nice-avatar";
 
 
 const AdminDashboard = () => {
@@ -96,12 +97,9 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <div className="w-full lg:w-3/4 lg:pl-8">
-        <div className="flex justify-end mb-4 bg-primary-500 rounded-lg">
-          <img
-            src="https://via.placeholder.com/40"
-            alt="Admin Profile"
-            className="rounded-lg cursor-pointer"
-          />
+        <div className="flex justify-end mb-4 bg-primary-500 rounded-full hover:cursor-pointer">
+        <Avatar style={{ width: 36, height: 36, margin: "0 0" }} config={genConfig({ sex: "man", hairStyle: "mohawk" })} />
+
         </div>
 
         {activeTab === 'user-management' && <UserManagement />}

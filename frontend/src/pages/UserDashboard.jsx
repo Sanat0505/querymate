@@ -1,13 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HomeIcon, UserCircleIcon, SupportIcon, DocumentAddIcon } from '@heroicons/react/solid';
 import RecentActivityTab from '../components/Tabs/RecentActivityTab';
 import ProfileSettingsTab from '../components/Tabs/ProfileSettingsTab';
 import SupportTab from '../components/Tabs/SupportTab';
 import SubmitQueryTab from '../components/Tabs/SubmitQueryTab';
-
+import Avatar, { genConfig } from "react-nice-avatar";
 
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState('submit-query');
+  const [avatarConfig, setAvatarConfig] = useState(null);
+
+  // Load avatar configuration from localStorage or generate a new one
+  useEffect(() => {
+    const savedConfig = localStorage.getItem('userAvatarConfig');
+    if (savedConfig) {
+      setAvatarConfig(JSON.parse(savedConfig));
+    } else {
+      const newConfig = genConfig({
+        sex: "man",
+        hairStyle: "mohawk",
+        hatStyle: "turban",
+      });
+      setAvatarConfig(newConfig);
+      localStorage.setItem('userAvatarConfig', JSON.stringify(newConfig));
+    }
+  }, []);
 
   return (
     <div className="container mx-auto p-4 lg:flex">
@@ -46,12 +63,10 @@ const UserDashboard = () => {
       </aside>
 
       <div className="w-full lg:w-3/4 lg:pl-8">
-        <div className="flex justify-end mb-4 bg-primary-500 rounded-lg">
-          <img
-            src="https://via.placeholder.com/40"
-            alt="Profile"
-            className="rounded-lg cursor-pointer"
-          />
+        <div className="flex justify-end mb-4 bg-primary-500 rounded-full hover:cursor-pointer">
+          {avatarConfig && (
+            <Avatar style={{ width: 36, height: 36, margin: "0 0" }} config={avatarConfig} />
+          )}
         </div>
 
         {activeTab === 'recent-activity' && <RecentActivityTab />}

@@ -62,12 +62,41 @@ export const signinApi = async (formData, navigate) => {
 };
 
 // Submit Query API call
+// export const submitQueryApi = async (query) => {
+//   try {
+//     const response = await apiClient.post("/querymate/queries/submitquery", query);
+//     console.log("Query Response:", response);
+//     return response.data;
+//   } catch (error) {
+//     handleError(error);
+//   }
+// };
+let mockDatabase = [];
 export const submitQueryApi = async (query) => {
   try {
-    const response = await apiClient.post("/querymate/queries/submitquery", query);
-    console.log("Query Response:", response);
-    return response.data;
+    const newQuery = {
+      id: mockDatabase.length + 1, // Auto-incrementing ID
+      ...query,
+      status: "Pending", // Default status for new queries
+      createdAt: new Date().toISOString(), // Timestamp for the query
+    };
+    mockDatabase.push(newQuery); // Add to the in-memory database
+    console.log("Query added:", newQuery);
+    // localStorage.setItem("mockDatabase",JSON.parse(newQuery))
+    return newQuery;
   } catch (error) {
-    handleError(error);
+    console.error("Error submitting query:", error.message);
+    throw new Error("Failed to submit query.");
+  }
+};
+
+export const getQueriesApi = async () => {
+  try {
+    console.log("Retrieving all queries:", mockDatabase);
+    localStorage.setItem("mockDatabase",mockDatabase)
+    return mockDatabase; // Return the in-memory database
+  } catch (error) {
+    console.error("Error retrieving queries:", error.message);
+    throw new Error("Failed to retrieve queries.");
   }
 };
