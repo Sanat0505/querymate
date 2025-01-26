@@ -13,9 +13,9 @@ const router = express.Router();
 //api routes
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.put("/update", authMiddleware, updateUser);
-router.delete("/delete", authMiddleware, deleteUser);
-router.get("/user", authMiddleware, getUser);
+router.put("/update",  updateUser);
+router.delete("/delete", deleteUser);
+router.get("/user", getUser);
 router.get("/users", getUsers);
 
 module.exports = router;
