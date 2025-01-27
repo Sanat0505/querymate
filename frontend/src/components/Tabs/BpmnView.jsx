@@ -69,124 +69,124 @@ import 'bpmn-js/dist/assets/bpmn-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import '@bpmn-io/properties-panel/assets/properties-panel.css';
 
-// const diagramXML = `<?xml version="1.0" encoding="UTF-8"?>
-//   <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-//     xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-//     xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-//     xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-//     id="Definitions_1">
-//     <bpmn:process id="Process_1" isExecutable="true">
-//         <bpmn:startEvent id="startEvent_1" name="Start Employee Onboarding">
-//           <bpmn:outgoing>Flow_1</bpmn:outgoing>
-//         </bpmn:startEvent>
-//         <bpmn:task id="task_2" name="Complete necessary paperwork">
-//           <bpmn:incoming>Flow_1</bpmn:incoming>
-//           <bpmn:outgoing>Flow_2</bpmn:outgoing>
-//         </bpmn:task>
-//         <bpmn:subProcess id="subProcess_3" name="IT Setup">
+const diagramXML = `<?xml version="1.0" encoding="UTF-8"?>
+  <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+    id="Definitions_1">
+    <bpmn:process id="Process_1" isExecutable="true">
+        <bpmn:startEvent id="startEvent_1" name="Start Employee Onboarding">
+          <bpmn:outgoing>Flow_1</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:task id="task_2" name="Complete necessary paperwork">
+          <bpmn:incoming>Flow_1</bpmn:incoming>
+          <bpmn:outgoing>Flow_2</bpmn:outgoing>
+        </bpmn:task>
+        <bpmn:subProcess id="subProcess_3" name="IT Setup">
           
-//             <bpmn:task id="subProcess_3_SubTask_1" name="Create user account" />
+            <bpmn:task id="subProcess_3_SubTask_1" name="Create user account" />
           
-//             <bpmn:task id="subProcess_3_SubTask_2" name="Connect hardware" />
+            <bpmn:task id="subProcess_3_SubTask_2" name="Connect hardware" />
           
-//             <bpmn:task id="subProcess_3_SubTask_3" name="Configure email" />
+            <bpmn:task id="subProcess_3_SubTask_3" name="Configure email" />
           
-//         </bpmn:subProcess>
-//         <bpmn:task id="task_4" name="Departmental Orientation">
-//           <bpmn:incoming>Flow_3</bpmn:incoming>
-//           <bpmn:outgoing>Flow_4</bpmn:outgoing>
-//         </bpmn:task>
-//         <bpmn:exclusiveGateway id="exclusiveGateway_5" name="Is Orientation Completed?">
-//           <bpmn:incoming>Flow_4</bpmn:incoming>
-//           <bpmn:outgoing>Flow_5</bpmn:outgoing>
-// <bpmn:outgoing>Flow_6</bpmn:outgoing>
-//         </bpmn:exclusiveGateway>
-//         <bpmn:task id="task_6" name="Attend training session">
-//           <bpmn:incoming>Flow_5</bpmn:incoming>
-//           <bpmn:outgoing>Flow_6</bpmn:outgoing>
-//         </bpmn:task>
-//         <bpmn:task id="task_7" name="Submit onboarding feedback">
-//           <bpmn:incoming>Flow_6</bpmn:incoming>
-//           <bpmn:outgoing>Flow_7</bpmn:outgoing>
-//         </bpmn:task>
-//         <bpmn:endEvent id="endEvent_8" name="Employee Onboarding Complete">
-//           <bpmn:incoming>Flow_7</bpmn:incoming>
-//         </bpmn:endEvent><bpmn:sequenceFlow id="Flow_1" sourceRef="[object Object]_1" targetRef="[object Object]_2" /><bpmn:sequenceFlow id="Flow_2" sourceRef="[object Object]_2" targetRef="[object Object]_3" /><bpmn:sequenceFlow id="Flow_3" sourceRef="[object Object]_3" targetRef="[object Object]_4" /><bpmn:sequenceFlow id="Flow_4" sourceRef="[object Object]_4" targetRef="[object Object]_5" /><bpmn:sequenceFlow id="Flow_5" sourceRef="[object Object]_5" targetRef="[object Object]_6" /><bpmn:sequenceFlow id="Flow_6" sourceRef="[object Object]_5" targetRef="[object Object]_7" /><bpmn:sequenceFlow id="Flow_7" sourceRef="[object Object]_6" targetRef="[object Object]_8" /><bpmn:sequenceFlow id="Flow_8" sourceRef="[object Object]_7" targetRef="undefined_9" /><bpmn:sequenceFlow id="Flow_9" sourceRef="[object Object]_8" targetRef="undefined_10" /><bpmn:sequenceFlow id="Flow_10" sourceRef="undefined_9" targetRef="undefined_11" /><bpmn:sequenceFlow id="Flow_11" sourceRef="undefined_10" targetRef="undefined_11" />
-//     </bpmn:process>
-//     <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-//       <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+        </bpmn:subProcess>
+        <bpmn:task id="task_4" name="Departmental Orientation">
+          <bpmn:incoming>Flow_3</bpmn:incoming>
+          <bpmn:outgoing>Flow_4</bpmn:outgoing>
+        </bpmn:task>
+        <bpmn:exclusiveGateway id="exclusiveGateway_5" name="Is Orientation Completed?">
+          <bpmn:incoming>Flow_4</bpmn:incoming>
+          <bpmn:outgoing>Flow_5</bpmn:outgoing>
+<bpmn:outgoing>Flow_6</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:task id="task_6" name="Attend training session">
+          <bpmn:incoming>Flow_5</bpmn:incoming>
+          <bpmn:outgoing>Flow_6</bpmn:outgoing>
+        </bpmn:task>
+        <bpmn:task id="task_7" name="Submit onboarding feedback">
+          <bpmn:incoming>Flow_6</bpmn:incoming>
+          <bpmn:outgoing>Flow_7</bpmn:outgoing>
+        </bpmn:task>
+        <bpmn:endEvent id="endEvent_8" name="Employee Onboarding Complete">
+          <bpmn:incoming>Flow_7</bpmn:incoming>
+        </bpmn:endEvent><bpmn:sequenceFlow id="Flow_1" sourceRef="[object Object]_1" targetRef="[object Object]_2" /><bpmn:sequenceFlow id="Flow_2" sourceRef="[object Object]_2" targetRef="[object Object]_3" /><bpmn:sequenceFlow id="Flow_3" sourceRef="[object Object]_3" targetRef="[object Object]_4" /><bpmn:sequenceFlow id="Flow_4" sourceRef="[object Object]_4" targetRef="[object Object]_5" /><bpmn:sequenceFlow id="Flow_5" sourceRef="[object Object]_5" targetRef="[object Object]_6" /><bpmn:sequenceFlow id="Flow_6" sourceRef="[object Object]_5" targetRef="[object Object]_7" /><bpmn:sequenceFlow id="Flow_7" sourceRef="[object Object]_6" targetRef="[object Object]_8" /><bpmn:sequenceFlow id="Flow_8" sourceRef="[object Object]_7" targetRef="undefined_9" /><bpmn:sequenceFlow id="Flow_9" sourceRef="[object Object]_8" targetRef="undefined_10" /><bpmn:sequenceFlow id="Flow_10" sourceRef="undefined_9" targetRef="undefined_11" /><bpmn:sequenceFlow id="Flow_11" sourceRef="undefined_10" targetRef="undefined_11" />
+    </bpmn:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+      <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
         
-//       <bpmndi:BPMNShape id="startEvent_1_di" bpmnElement="startEvent_1">
-//         <dc:Bounds x="150" y="100" width="100" height="80" />
-//       </bpmndi:BPMNShape>
-//       <bpmndi:BPMNShape id="task_2_di" bpmnElement="task_2">
-//         <dc:Bounds x="300" y="100" width="100" height="80" />
-//       </bpmndi:BPMNShape>
-//       <bpmndi:BPMNShape id="subProcess_3_di" bpmnElement="subProcess_3">
-//         <dc:Bounds x="450" y="100" width="100" height="80" />
-//       </bpmndi:BPMNShape>
-//       <bpmndi:BPMNShape id="task_4_di" bpmnElement="task_4">
-//         <dc:Bounds x="600" y="100" width="100" height="80" />
-//       </bpmndi:BPMNShape>
-//       <bpmndi:BPMNShape id="exclusiveGateway_5_di" bpmnElement="exclusiveGateway_5">
-//         <dc:Bounds x="750" y="100" width="100" height="80" />
-//       </bpmndi:BPMNShape>
-//       <bpmndi:BPMNShape id="task_6_di" bpmnElement="task_6">
-//         <dc:Bounds x="900" y="100" width="100" height="80" />
-//       </bpmndi:BPMNShape>
-//       <bpmndi:BPMNShape id="task_7_di" bpmnElement="task_7">
-//         <dc:Bounds x="1050" y="100" width="100" height="80" />
-//       </bpmndi:BPMNShape>
-//       <bpmndi:BPMNShape id="endEvent_8_di" bpmnElement="endEvent_8">
-//         <dc:Bounds x="1200" y="100" width="100" height="80" />
-//       </bpmndi:BPMNShape>
-//       <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
-//         <di:waypoint x="250" y="140" />
-//         <di:waypoint x="300" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
-//         <di:waypoint x="400" y="140" />
-//         <di:waypoint x="450" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
-//         <di:waypoint x="550" y="140" />
-//         <di:waypoint x="600" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
-//         <di:waypoint x="700" y="140" />
-//         <di:waypoint x="750" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
-//         <di:waypoint x="850" y="140" />
-//         <di:waypoint x="900" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
-//         <di:waypoint x="850" y="140" />
-//         <di:waypoint x="1050" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
-//         <di:waypoint x="1000" y="140" />
-//         <di:waypoint x="1200" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
-//         <di:waypoint x="1150" y="140" />
-//         <di:waypoint x="1350" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
-//         <di:waypoint x="1300" y="140" />
-//         <di:waypoint x="1500" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
-//         <di:waypoint x="1450" y="140" />
-//         <di:waypoint x="1650" y="140" />
-//       </bpmndi:BPMNEdge>
-//       <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11">
-//         <di:waypoint x="1600" y="140" />
-//         <di:waypoint x="1650" y="140" />
-//       </bpmndi:BPMNEdge>
-//       </bpmndi:BPMNPlane>
-//     </bpmndi:BPMNDiagram>
-//   </bpmn:definitions>`;
+      <bpmndi:BPMNShape id="startEvent_1_di" bpmnElement="startEvent_1">
+        <dc:Bounds x="150" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="task_2_di" bpmnElement="task_2">
+        <dc:Bounds x="300" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="subProcess_3_di" bpmnElement="subProcess_3">
+        <dc:Bounds x="450" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="task_4_di" bpmnElement="task_4">
+        <dc:Bounds x="600" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="exclusiveGateway_5_di" bpmnElement="exclusiveGateway_5">
+        <dc:Bounds x="750" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="task_6_di" bpmnElement="task_6">
+        <dc:Bounds x="900" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="task_7_di" bpmnElement="task_7">
+        <dc:Bounds x="1050" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="endEvent_8_di" bpmnElement="endEvent_8">
+        <dc:Bounds x="1200" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="250" y="140" />
+        <di:waypoint x="300" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="400" y="140" />
+        <di:waypoint x="450" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="550" y="140" />
+        <di:waypoint x="600" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="700" y="140" />
+        <di:waypoint x="750" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="850" y="140" />
+        <di:waypoint x="900" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="850" y="140" />
+        <di:waypoint x="1050" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="1000" y="140" />
+        <di:waypoint x="1200" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="1150" y="140" />
+        <di:waypoint x="1350" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
+        <di:waypoint x="1300" y="140" />
+        <di:waypoint x="1500" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
+        <di:waypoint x="1450" y="140" />
+        <di:waypoint x="1650" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11">
+        <di:waypoint x="1600" y="140" />
+        <di:waypoint x="1650" y="140" />
+      </bpmndi:BPMNEdge>
+      </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+  </bpmn:definitions>`;
 
 const BpmnView = ({bpmnXml}) => {
   const canvasRef = useRef(null);
@@ -226,11 +226,11 @@ let diagramXML = `<?xml version="1.0" encoding="UTF-8"?>
     // Load initial diagram
     const loadInitialDiagram = async () => {
       try {
-        // if(bpmnXml === ''){
-        //   await bpmnModeler.importXML(diagramXML);}
-        // else {
+        if(bpmnXml === ''){
+          await bpmnModeler.importXML(diagramXML);}
+        else {
           await bpmnModeler.importXML(bpmnXml);
-        // }
+        }
 
         console.log('Diagram loaded successfully.');
       } catch (err) {

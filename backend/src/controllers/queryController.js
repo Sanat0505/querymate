@@ -10,12 +10,32 @@ const submitQuery = async (req, res) => {
   try {
     // Use Hugging Face service to classify the query
     const classification = await classifyQuery(
-      `Classify this query as "Automated" or "Escalated": ${queryText}`
+      `You are an intelligent assistant trained to classify customer support queries into two categories: "Automated" or "Escalated." Use the following criteria:
+
+1. Automated Queries:
+   -> Queries that can be addressed using predefined responses, FAQs, or standard procedures.
+   ->Examples:
+     -> "How can I reset my password?"
+     -> "What is your refund policy?"
+     -> "What are your business hours?"
+
+2. Escalated Queries:
+   -> Queries that require human intervention, manual review, or access to account-specific or sensitive information.
+   -> Examples:
+     -> "Can you check my order status?"
+     -> "I was charged twice for a subscription. Can you process a refund?"
+     -> "My account has been suspended. Can you help?"
+
+Now, based on the above criteria, classify the following query into one of the two categories:
+"${queryText}"
+
+Respond with one word only: "Automated" or "Escalated".
+`
     );
     // Save the query in the database
     if (classification === "Automated") {
       automatedResponse = await classifyQuery(queryText);
-      status = "Done";
+      status = "Completed";
     }
     const query = new Query({
       userId: req.user.id,
@@ -28,8 +48,11 @@ const submitQuery = async (req, res) => {
     await query.save();
     res.status(201).json({
       message: "Query submitted",
+      userId: req.user.id,
+      queryText,
       classification,
-      response: automatedResponse || "Query escalated to admin.",
+      status: status || "Pending",
+      response: automatedResponse || "Your query has been escalated to the admin team for review.",
     });
   } catch (error) {
     console.log("eror", error);

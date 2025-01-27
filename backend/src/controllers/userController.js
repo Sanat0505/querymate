@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
+const jwt = require("jsonwebtoken");
+const config = require("../config/config");
 
 // User Registration 
 const registerUser = async (req, res) => {
@@ -23,7 +25,35 @@ const registerUser = async (req, res) => {
   }
 };
 
-// User Login 
+// // User Login (Simple login without JWT)
+// const loginUser = async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     // Find the user by email
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(400).json({ message: "No account found with this email. Please sign up first." });
+//     }
+
+//     // Compare provided password with the stored hashed password
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
+//     if (!isPasswordValid) {
+//       return res.status(400).json({ message: "Invalid credentials. Please check your email and password." });
+//     }
+
+//     // Log successful login for debugging
+//     console.log("User logged in successfully:", user); // Log user data after successful login
+
+//     // Send back user data and role (without using JWT)
+//     res.json({ message: "Login successful", user: { name: user.name, email: user.email, role: user.role } });
+//   } catch (error) {
+//     console.error("Error during login:", error); // Log server error details (for debugging)
+//     res.status(500).json({ message: "Server error, please try again later." });
+//   }
+// };
+
+// User Login (with JWT)
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -38,9 +68,26 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials. Please check your email and password." });
     }
 
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user._id, role: user.role, name: user.name, email: user.email, }, // Payload (e.g., user ID and role)
+      config.jwtSecret,                 // Secret key
+      { expiresIn: config.jwtExpiration || "1d" } // Token expiration
+    );
+
+    // Log successful login for debugging
+    console.log("User logged in successfully:", user);
+
+    // Send back token, user data, and role
+    res.json({
+      message: "Login successful",
+      token,
+      user: { name: user.name, email: user.email, role: user.role }
+    });
     console.log("User logged in successfully:", user);
     res.json({ message: "Login successful", user: { name: user.name, email: user.email, role: user.role } });
   } catch (error) {
+    console.error("Error during login:", error);
     console.error("Error during login:", error);
     res.status(500).json({ message: "Server error, please try again later." });
   }
