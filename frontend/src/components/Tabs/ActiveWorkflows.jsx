@@ -22,26 +22,6 @@ const WorkflowDetailsModal = ({ workflow, isOpen, onClose }) => {
 
   console.log(workflow.bpmnXml)
   return (
-    // <Modal isOpen={isOpen} onRequestClose={onClose} className="modal-content ">
-    //   <h3 className="text-2xl font-semibold mb-4">{workflow.name} Details</h3>
-    //   <p><strong>Workflow ID:</strong> {workflow.id}</p>
-    //   <p><strong>Start Time:</strong> {new Date(workflow.startTime).toLocaleString()}</p>
-    //   <p><strong>Status:</strong> {workflow.status}</p>
-    //   <p><strong>User Query:</strong> {workflow.userQuery}</p>
-
-    //   <h4 className="mt-4 font-semibold">BPMN Diagram</h4>
-    //   <div className="flex justify-center items-center" style={{ width: "100%", height: "300px", border: "1px solid #ccc", borderRadius: "4px" }}>
-    //     <BpmnView bpmnXml={workflow.bpmnXml} />
-    //   </div>
-
-    //   <button onClick={onClose} className="mt-4 bg-primary-600 text-white px-4 py-2 rounded">
-    //     Close
-    //   </button>
-
-
-
-    // </Modal>
-
     <Modal
         open={isOpen}
         onClose={onClose}
@@ -101,10 +81,6 @@ const ActiveWorkflows = () => {
       )
     );
   };
-
-  // const viewDetails = (workflowId) => {
-  //   alert(`Viewing details for Workflow ID: ${workflowId}`);
-  // };
 
   return (
     <div className="w-full h-auto lg:h-[88vh] max-h-[88vh] overflow-y-scroll bg-white dark:bg-gray-800 shadow-lg p-6 rounded-lg">

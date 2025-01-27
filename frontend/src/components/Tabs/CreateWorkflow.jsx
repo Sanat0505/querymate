@@ -40,7 +40,7 @@ const WorkflowCreator = () => {
     // e.preventDefault();
     if (!bpmnDesc.trim()) return;
     
-    const userMessage = { role: "user", content: `You are an expert in business process modeling. Generate a process description for a BPMN diagram. The output should be a structured JSON object with two main parts:
+    const userMessage = { role: "user", content: `You are an expert in business process modeling. Generate a process description for a BPMN diagram. If queries are anything, the output should be a structured JSON object of process description for a BPMN diagram with two main parts:
 
 1. "elements": An array of objects where each object describes a BPMN element. Each element has:
    - "type": The type of BPMN element (e.g., "startEvent", "task", "exclusiveGateway", "endEvent").

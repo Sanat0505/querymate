@@ -1,12 +1,13 @@
 import axios from "axios";
 
-// Configure Axios instance
+// Configure Axios instance for APIs calling
+
 const apiClient = axios.create({
   baseURL: "http://localhost:3001", // Ensure this matches your backend URL
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Required to send cookies (like JWT token)
+  withCredentials: true, // Required to send cookies (we are using JWT token)
 });
 
 // Handle errors in API requests
@@ -37,7 +38,7 @@ export const signUpApi = async (formData) => {
 };
 
 // Login API call
-export const signinApi = async (formData, navigate) => {
+export const signInApi = async (formData) => {
   try {
     const response = await apiClient.post("/querymate/auth/login", formData);
     
@@ -45,12 +46,8 @@ export const signinApi = async (formData, navigate) => {
     console.log("SignIn Response:", response.data);
 
     if (response.data) {
-      // Optionally: store login info (for instance in localStorage or sessionStorage)
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      localStorage.setItem("message", response.data.message);  // You can also store other messages if needed
-
-      // If successful, redirect to dashboard (or other page)
-      navigate("/dashboard");  // Assuming you're using react-router-dom and have a dashboard route set up
+      // storing login information
+      localStorage.setItem("user", JSON.stringify(response.data));
     } else {
       throw new Error("Login failed, no data returned.");
     }

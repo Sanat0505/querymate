@@ -3,15 +3,16 @@ const Workflow = require("../models/workflowModel");
 //create workflow
 const createWorkflow = async (req, res) => {
   try {
-    const { id, name, startTime, status, userQuery, bpmnXml } = req.body;
+    const { id, name, startTime, status, userQuery, bpmnXml, userEmail } = req.body;
 
     const workflow = new Workflow({
-      id,
+      id:`WF-${Date.now()}`,
       name,
       startTime,
-      status,
+      status:"Active",
       userQuery,
       bpmnXml,
+      userEmail
     });
 
     await workflow.save();
@@ -75,10 +76,20 @@ const getWorkflowDetails = async (req, res) => {
       .json({ message: "Error fetching workflow details..!", error });
   }
 };
-
+// Delete a workflow
+const deleteWorkflow = async (req, res) => {
+    try {
+      const { workflowId } = req.params;
+      await Workflow.findOneAndDelete({ id: workflowId });
+      res.json({ message: "Workflow deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Error deleting workflow", error });
+    }
+  };
 module.exports = {
   getActiveWorkflows,
   updateWorkflowStatus,
   getWorkflowDetails,
   createWorkflow,
+  deleteWorkflow
 };

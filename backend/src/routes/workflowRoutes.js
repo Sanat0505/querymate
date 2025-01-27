@@ -4,6 +4,7 @@ const {
   updateWorkflowStatus,
   getWorkflowDetails,
   createWorkflow,
+  deleteWorkflow
 } = require("../controllers/workflowController"); // Import workflow controller
 const router = express.Router();
 
@@ -18,5 +19,8 @@ router.put("/:workflowId/status", updateWorkflowStatus);
 
 // Get workflow details
 router.get("/:workflowId", getWorkflowDetails);
+
+//delete workflow
+router.delete("/:workflowId", deleteWorkflow);
 
 module.exports = router;

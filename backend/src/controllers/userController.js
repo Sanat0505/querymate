@@ -78,7 +78,7 @@ const loginUser = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user._id, role: user.role, name: user.name, email: user.email, }, // Payload (e.g., user ID and role)
+      { id: user._id, role: user.role, name: user.name, email: user.email, },
       config.jwtSecret,                 // Secret key
       { expiresIn: config.jwtExpiration || "1d" } // Token expiration
     );
@@ -101,7 +101,7 @@ const loginUser = async (req, res) => {
 // Update User Profile
 const updateUser = async (req, res) => {
   const { name, email, password } = req.body;
-  const userId = req.user.id; // Get user ID from the request (In your case, you are not using JWT anymore)
+  const userId = req.user.id; // Get user ID from the request
 
   try {
     // Prevent users from updating other users' profiles

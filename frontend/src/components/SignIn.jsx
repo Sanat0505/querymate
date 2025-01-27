@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import Avatar, { genConfig } from "react-nice-avatar";
-import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { signInApi } from "../services/api"; // Import the Sign-In API function
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -18,25 +18,32 @@ const SignIn = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    try {
+      // Call the API to sign in
+      const response = await signInApi(formData); 
+      
+      if (response.token) {
+        // Save the token to localStorage 
+        localStorage.setItem("authToken", response.token.token);
+        toast.success("Welcome to Querymate..!");
 
-    // Mock login logic since there's no API
-    const mockEmail = "sanatkakadiya80@gmail.com";
-    const mockPassword = "Abc@213";
-
-    if (formData.email === mockEmail && formData.password === mockPassword) {
-      setMessage("Welcome back!");
-      toast.success("Welcome to the Querymate..!")
-      navigate("/dashboard"); // Redirect to the user dashboard
-    } else {
-      setMessage("Invalid email or password.");
+        // Redirect the user to the dashboard
+        navigate("/dashboard");
+      } else {
+        // If no token is returned, handle as an error
+        toast.error("Sign-in failed. Please check your credentials.");
+      }
+    } catch (error) {
+      // Handle API errors
+      console.error("Sign-in error:", error);
+      toast.error(error.response?.data?.message || "An error occurred during sign-in.");
     }
   };
 
   return (
     <div className="sign-in-container">
-      {/* <Avatar style={{ width: 100, height: 100, margin: "0 auto" }} config={genConfig()} /> */}
       <form className="mt-6" onSubmit={handleSubmit}>
         <div className="mb-4">
           <label

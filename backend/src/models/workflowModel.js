@@ -20,8 +20,9 @@ const WorkflowSchema = new mongoose.Schema({
       message: "Invalid BPMN XML format.",
     },
   },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
-  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", require:false }, 
+  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", require:false },
+  userEmail: { type: String, required: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Workflow", WorkflowSchema);

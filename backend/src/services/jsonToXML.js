@@ -36,7 +36,7 @@ const generateBpmnXml = (bpmnStructure) => {
     `;
   };
   
-  // Example usage
+  // Example 
   const bpmnStructure = {
     elements: [
       { type: "startEvent", name: "New Employee Joins" },

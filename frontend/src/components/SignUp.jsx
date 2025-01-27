@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { signUpApi } from "../services/api"; // Import the signUpApi function
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { signUpApi } from "../services/api";
 
-const SignUp = () => {
+const SignUp = ({ onSignInModalOpen }) => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate for redirection
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -20,14 +18,12 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload on form submission
     try {
-      const response = await signUpApi(formData); // Make API request
+      const response = await signUpApi(formData); // Making API request
       console.log("response", response);
-      setMessage(`Success: ${response.message || "Signup successful!"}`);
 
-      // Redirect to the user dashboard after successful signup
-      navigate("/dashboard"); // Replace '/userdashboard' with your actual route
+      setMessage(`Success: ${response.message || "Signup successful!"}`);
+      onSignInModalOpen(); // Trigger the SignIn modal after successful signup
     } catch (error) {
-      // Handle error response (e.g., show error message)
       setMessage(`Error: ${error.response?.data?.message || error.message || "Something went wrong!"}`);
     }
   };
