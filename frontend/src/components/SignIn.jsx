@@ -18,29 +18,6 @@ const SignIn = () => {
   };
 
   // Handle form submission
-<<<<<<< HEAD
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    try {
-      // Call the API to sign in
-      const response = await signInApi(formData); 
-      
-      if (response.token) {
-        // Save the token to localStorage 
-        localStorage.setItem("authToken", response.token.token);
-        toast.success("Welcome to Querymate..!");
-
-        // Redirect the user to the dashboard
-        navigate("/dashboard");
-      } else {
-        // If no token is returned, handle as an error
-        toast.error("Sign-in failed. Please check your credentials.");
-      }
-    } catch (error) {
-      // Handle API errors
-      console.error("Sign-in error:", error);
-      toast.error(error.response?.data?.message || "An error occurred during sign-in.");
-=======
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -54,7 +31,6 @@ const SignIn = () => {
       navigate("/dashboard"); // Redirect to the user dashboard
     } else {
       setMessage("Invalid email or password.");
->>>>>>> 8af61e603d8e9913f596bc6f3b99b792725695bc
     }
   };
 

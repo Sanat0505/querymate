@@ -1,17 +1,14 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
-// Middleware for handling authentication and CORS settings
 const authMiddleware = (req, res, next) => {
-  // Set CORS headers to allow specific origins and methods
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://tb-querymate.vercel.app, http://localhost:3000"
+    "https://tb-querymate.vercel.app, http://localhost:3000/"
   );
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-  // Handle preflight OPTIONS requests
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
