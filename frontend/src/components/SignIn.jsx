@@ -18,6 +18,7 @@ const SignIn = () => {
   };
 
   // Handle form submission
+<<<<<<< HEAD
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
     try {
@@ -39,6 +40,21 @@ const SignIn = () => {
       // Handle API errors
       console.error("Sign-in error:", error);
       toast.error(error.response?.data?.message || "An error occurred during sign-in.");
+=======
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Mock login logic since there's no API
+    const mockEmail = "sanatkakadiya80@gmail.com";
+    const mockPassword = "Abc@213";
+
+    if (formData.email === mockEmail && formData.password === mockPassword) {
+      setMessage("Welcome back!");
+      toast.success("Welcome to the Querymate..!")
+      navigate("/dashboard"); // Redirect to the user dashboard
+    } else {
+      setMessage("Invalid email or password.");
+>>>>>>> 8af61e603d8e9913f596bc6f3b99b792725695bc
     }
   };
 

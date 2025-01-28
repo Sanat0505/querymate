@@ -1,6 +1,9 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
+<<<<<<< HEAD
 const bcrypt = require("bcryptjs");
+=======
+>>>>>>> 8af61e603d8e9913f596bc6f3b99b792725695bc
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
@@ -85,7 +88,13 @@ const loginUser = async (req, res) => {
       token,
       user: { name: user.name, email: user.email, role: user.role }
     });
+<<<<<<< HEAD
+=======
+    console.log("User logged in successfully:", user);
+    res.json({ message: "Login successful", user: { name: user.name, email: user.email, role: user.role } });
+>>>>>>> 8af61e603d8e9913f596bc6f3b99b792725695bc
   } catch (error) {
+    console.error("Error during login:", error);
     console.error("Error during login:", error);
     res.status(500).json({ message: "Server error, please try again later." });
   }
