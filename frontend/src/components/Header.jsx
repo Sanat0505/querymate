@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-lg">
       <div className="max-w-screen-xl mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex justify-between items-center">
           {/* Brand Logo */}
           <a href="#" className="text-xl font-bold text-gray-900 dark:text-white flex items-center justify-center">
             <img src={logo} alt="QM" className="h-20 w-20"/><p className="-ml-6">ueryMate</p>

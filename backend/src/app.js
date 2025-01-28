@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const userRoutes = require("./routes/userRoutes");
 const queryRoutes = require("./routes/queryRoutes");
+const workflowsRoutes = require("./routes/workflowRoutes");
+const tasksRoutes = require("./routes/tasksRoutes");
 
 const app = express();
 
@@ -34,14 +36,16 @@ app.use(
 app.use(express.json()); // Parse incoming JSON requests
 
 // Handle preflight requests
-app.options('*', cors(corsOptions)); // Enable pre-flight across-the-board
+app.options("*", cors(corsOptions)); // Enable pre-flight across-the-board
 
 // Routes
 app.use("/querymate/auth", userRoutes);
 app.use("/querymate/queries", queryRoutes);
+app.use("/querymate/workflows", workflowsRoutes);
+app.use("/querymate/tasks", tasksRoutes);
 
 // For root route (optional, for testing server health)
-app.get("/", ( _req, res) => {
+app.get("/", (_req, res) => {
   res.send("Server is running");
 });
 

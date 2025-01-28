@@ -35,7 +35,8 @@ const Settings = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+    <div className="w-full h-auto lg:h-[88vh] max-h-[88vh] overflow-y-scroll bg-white dark:bg-gray-800 shadow-lg p-6 rounded-lg">
+
       <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Settings</h3>
 
       {/* Profile Settings */}

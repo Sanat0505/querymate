@@ -5,11 +5,31 @@
   text-align: center;
 }
 
+.scrollable-container::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Track color */
+  border-radius: 4px;
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+  background: #888; /* Thumb color */
+  border-radius: 4px;
+}
+
+.scrollable-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Thumb hover color */
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
-
+.MuiBox-root.css-1wnsr1i{
+  width: 900px;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

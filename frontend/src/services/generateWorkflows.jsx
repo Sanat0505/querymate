@@ -1,5 +1,5 @@
 export const generateBPMNXML = (processDescription) => {
-  console.log("xmlllll",processDescription)
+  console.log("xmlllll", processDescription);
   const bpmnHeader = `<?xml version="1.0" encoding="UTF-8"?>
   <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
     xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
@@ -17,104 +17,107 @@ export const generateBPMNXML = (processDescription) => {
     </bpmndi:BPMNDiagram>
   </bpmn:definitions>`;
 
-  const bpmnElements = processDescription.elements.map((element, index) => {
-    const id = `${element.type}_${index + 1}`;
-    const flowId = `Flow_${index + 1}`;
-    
-    switch (element.type) {
-      case 'startEvent':
-        return `
-        <bpmn:startEvent id="${id}" name="${element.name}">
-          <bpmn:outgoing>${flowId}</bpmn:outgoing>
-        </bpmn:startEvent>`;
-        
-      case 'task':
-        return `
-        <bpmn:task id="${id}" name="${element.name}">
-          <bpmn:incoming>Flow_${index}</bpmn:incoming>
-          <bpmn:outgoing>${flowId}</bpmn:outgoing>
-        </bpmn:task>`;
-        
-      case 'exclusiveGateway':
-      case 'parallelGateway':
-      case 'inclusiveGateway':
-        return `
-        <bpmn:${element.type} id="${id}" name="${element.name}">
-          <bpmn:incoming>Flow_${index}</bpmn:incoming>
-          ${element.outgoing.map(out => `<bpmn:outgoing>Flow_${out}</bpmn:outgoing>`).join('\n')}
-        </bpmn:${element.type}>`;
-        
-      case 'subProcess':
-        return `
-        <bpmn:subProcess id="${id}" name="${element.name}">
-          ${element.elements.map((subElement, subIndex) => `
-            <bpmn:task id="${id}_SubTask_${subIndex + 1}" name="${subElement.name}" />
-          `).join('')}
-        </bpmn:subProcess>`;
-        
-      case 'endEvent':
-        return `
-        <bpmn:endEvent id="${id}" name="${element.name}">
-          <bpmn:incoming>Flow_${index}</bpmn:incoming>
-        </bpmn:endEvent>`;
-        
-      default:
-        return '';
-    }
-  }).join('');
+  const bpmnElements = processDescription.elements
+    .map((element, index) => {
+      const id = `${element.type}_${index + 1}`;
+      const flowId = `Flow_${index + 1}`;
 
-  const sequenceFlows = processDescription.sequenceFlows.map((flow, index) => {
-    if (!processDescription.elements[flow.sourceRef] || !processDescription.elements[flow.targetRef]) {
+      switch (element.type) {
+        case "startEvent":
+          return `
+          <bpmn:startEvent id="${id}" name="${element.name}">
+            <bpmn:outgoing>${flowId}</bpmn:outgoing>
+          </bpmn:startEvent>`;
+        case "task":
+          return `
+          <bpmn:task id="${id}" name="${element.name}">
+            <bpmn:incoming>Flow_${index}</bpmn:incoming>
+            <bpmn:outgoing>${flowId}</bpmn:outgoing>
+          </bpmn:task>`;
+        case "exclusiveGateway":
+        case "parallelGateway":
+        case "inclusiveGateway":
+          return `
+          <bpmn:${element.type} id="${id}" name="${element.name}">
+            <bpmn:incoming>Flow_${index}</bpmn:incoming>
+            ${element.outgoing
+              .map((out) => `<bpmn:outgoing>Flow_${out}</bpmn:outgoing>`)
+              .join("\n")}
+          </bpmn:${element.type}>`;
+        case "subProcess":
+          return `
+          <bpmn:subProcess id="${id}" name="${element.name}">
+            ${element.elements
+              .map(
+                (subElement, subIndex) => `
+              <bpmn:task id="${id}_SubTask_${subIndex + 1}" name="${subElement.name}" />
+            `
+              )
+              .join("")}
+          </bpmn:subProcess>`;
+        case "endEvent":
+          return `
+          <bpmn:endEvent id="${id}" name="${element.name}">
+            <bpmn:incoming>Flow_${index}</bpmn:incoming>
+          </bpmn:endEvent>`;
+        default:
+          return "";
+      }
+    })
+    .join("");
+
+  // Validate sequence flows to ensure all references are within bounds
+  const validSequenceFlows = processDescription.sequenceFlows.filter((flow) => {
+    const isValid =
+      processDescription.elements[flow.sourceRef] &&
+      processDescription.elements[flow.targetRef];
+    if (!isValid) {
       console.error("Invalid flow reference:", flow);
-      return ''; // Skip invalid flows
     }
-    return `<bpmn:sequenceFlow id="Flow_${index + 1}" sourceRef="${processDescription.elements[flow.sourceRef].type}_${flow.sourceRef + 1}" targetRef="${processDescription.elements[flow.targetRef].type}_${flow.targetRef + 1}" />`;
-  }).join('');
-  
+    return isValid;
+  });
+
+  const sequenceFlows = validSequenceFlows
+    .map(
+      (flow, index) => `<bpmn:sequenceFlow id="Flow_${index + 1}" 
+        sourceRef="${processDescription.elements[flow.sourceRef].type}_${flow.sourceRef + 1}" 
+        targetRef="${processDescription.elements[flow.targetRef].type}_${flow.targetRef + 1}" />`
+    )
+    .join("");
 
   return `${bpmnHeader}${bpmnElements}${sequenceFlows}${bpmnFooter}`;
-}
+};
 
 function generateDiagramElements(processDescription) {
-  const shapes = processDescription.elements.map((element, index) => {
-    const id = `${element.type}_${index + 1}`;
-    const x = 150 + index * 150; // Dynamic X position based on index
-    const y = 100; // Fixed Y position for simplicity
-    return `
+  const shapes = processDescription.elements
+    .map((element, index) => {
+      const id = `${element.type}_${index + 1}`;
+      const x = 150 + index * 150; // Dynamic X position based on index
+      const y = 100; // Fixed Y position for simplicity
+      return `
       <bpmndi:BPMNShape id="${id}_di" bpmnElement="${id}">
         <dc:Bounds x="${x}" y="${y}" width="100" height="80" />
       </bpmndi:BPMNShape>`;
-  }).join('');
+    })
+    .join("");
 
-  const edges = processDescription.sequenceFlows.map((flow, index) => {
-    const sourceIndex = flow.sourceRef;
-    const targetIndex = flow.targetRef;
-    return `
+  const edges = processDescription.sequenceFlows
+    .map((flow, index) => {
+      const sourceIndex = flow.sourceRef;
+      const targetIndex = flow.targetRef;
+      if (
+        sourceIndex >= processDescription.elements.length ||
+        targetIndex >= processDescription.elements.length
+      ) {
+        return ""; // Skip invalid flows
+      }
+      return `
       <bpmndi:BPMNEdge id="Flow_${index + 1}_di" bpmnElement="Flow_${index + 1}">
         <di:waypoint x="${150 + sourceIndex * 150 + 100}" y="140" />
         <di:waypoint x="${150 + targetIndex * 150}" y="140" />
       </bpmndi:BPMNEdge>`;
-  }).join('');
+    })
+    .join("");
 
   return `${shapes}${edges}`;
 }
-
-// Example Usage:
-// const processDescription = {
-//   elements: [
-//     { type: 'startEvent', name: 'Start' },
-//     { type: 'task', name: 'Task 1', taskType: 'user' },
-//     { type: 'exclusiveGateway', name: 'Decision', outgoing: [3, 4] },
-//     { type: 'task', name: 'Task A', taskType: 'manual' },
-//     { type: 'task', name: 'Task B', taskType: 'user' },
-//     { type: 'endEvent', name: 'End' }
-//   ],
-//   sequenceFlows: [
-//     { sourceRef: 0, targetRef: 1 },
-//     { sourceRef: 1, targetRef: 2 },
-//     { sourceRef: 2, targetRef: 3 },
-//     { sourceRef: 2, targetRef: 4 },
-//     { sourceRef: 3, targetRef: 5 },
-//     { sourceRef: 4, targetRef: 5 }
-//   ]
-// };

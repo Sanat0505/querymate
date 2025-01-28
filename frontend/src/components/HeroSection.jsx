@@ -6,12 +6,16 @@ import hero_bg from "../assets/images/bg_img.png"
 
 const HeroSection = () => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isLogin, setLogin] = useState(true);
 
   const toggleModal = (login) => {
     setLogin(login);
     setModalOpen(!isModalOpen);
   };
+
+  const handleOpenSignIn = () => setIsSignInOpen(true);
+  const handleCloseSignIn = () => setIsSignInOpen(false);
 
   return (
     <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
@@ -52,7 +56,7 @@ const HeroSection = () => {
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white text-center">
               {isLogin ? "SignIn" : "Sign Up"}
             </h2>
-            {isLogin ? <SignIn /> : <SignUp />}
+            {isLogin ? <SignIn isOpen={isSignInOpen} onClose={handleCloseSignIn}/> : <SignUp onSignInModalOpen={handleOpenSignIn}/>}
             <div className="flex justify-between mt-4">
               <button
                 onClick={() => toggleModal(false)}
