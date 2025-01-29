@@ -1,14 +1,18 @@
 import axios from "axios";
 
 // Configure Axios instance for APIs calling
-
 const apiClient = axios.create({
-  baseURL: "http://localhost:3001", // Ensure this matches your backend URL
+  baseURL: "http://localhost:3001",
   headers: {
     "Content-Type": "application/json",
+    // Add Authorization header if token exists
+    Authorization: localStorage.getItem("token") 
+      ? `Bearer ${localStorage.getItem("token")}` 
+      : "",
   },
-  withCredentials: true, // Required to send cookies (we are using JWT token)
 });
+
+
 
 // Handle errors in API requests
 const handleError = (error) => {
@@ -41,20 +45,33 @@ export const signUpApi = async (formData) => {
 export const signInApi = async (formData) => {
   try {
     const response = await apiClient.post("/querymate/auth/login", formData);
-    
-    // Log only the relevant data (message and user)
+
+    // Log the response data for debugging
     console.log("SignIn Response:", response.data);
 
     if (response.data) {
-      // storing login information
-      localStorage.setItem("user", JSON.stringify(response.data));
+      const { token, user } = response.data;
+
+      // Store token and user details separately in localStorage
+      localStorage.setItem("token", token); // Save JWT token
+      localStorage.setItem("user", JSON.stringify(user)); // Save user details
+
+      console.log("Login successful. User and token stored in localStorage.");
     } else {
-      throw new Error("Login failed, no data returned.");
+      throw new Error("Login failed. No data returned from server.");
     }
 
-    return response.data;
+    return response.data; // Return the response data for further usage
   } catch (error) {
-    handleError(error);
+    // Improved error handling
+    console.error("Error during login:", error.message || error);
+
+    // Custom error message handling
+    if (error.response?.data?.message) {
+      console.error("Server Response:", error.response.data.message);
+    }
+
+    throw error; // Re-throw the error so it can be caught by the calling function
   }
 };
 
@@ -94,25 +111,17 @@ export const updateUserApi = async (userData) => {
   }
 };
 
-
 // Delete User API call 
-export const deleteUserApi = async (name) => {
+export const deleteUserApi = async (userId) => {
   try {
-    if (!name) {
-      throw new Error("User name is required to delete a user."); // Validation in case name is missing
-    }
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not logged in");
 
-    // DELETE request to the backend
-    const response = await apiClient.delete("/querymate/auth/delete", {
-      data: { name }, // Pass name in the request body (as required by your backend)
+    await apiClient.delete(`/querymate/auth/delete/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-
-    console.log("Delete Response:", response.data); // Log success
-    return response.data; // Return confirmation of deletion
-
   } catch (error) {
-    console.error("Error in deleteUserApi:", error.message);
-    handleError(error); // Centralized error handling
+    handleError(error);
   }
 };
 
@@ -138,15 +147,21 @@ export const getUserApi = async (name) => {
 // Get All Users API call
 export const getUsersApi = async () => {
   try {
-    // GET request to fetch all users
-    const response = await apiClient.get("/querymate/auth/users");
-    console.log("Get Users Response:", response.data); // Log all users
-    return response.data; // Return the list of users
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated");
+
+    const response = await apiClient.get("/querymate/auth/users", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log("Fetched Users:", response.data);
+    return response.data;
   } catch (error) {
-    console.error("Error in getUsersApi:", error.message);
-    handleError(error); // Centralized error handling
+    console.error("Error fetching users:", error.message);
+    handleError(error);
   }
 };
+
 // Submit Query API call
 // export const submitQueryApi = async (query) => {
 //   try {

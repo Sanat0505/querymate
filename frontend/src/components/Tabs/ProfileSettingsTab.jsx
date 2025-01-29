@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { updateUserApi } from "../../services/api"; // Ensure this is the correct import for your API
-
+import { updateUserApi } from "../../services/api"; 
 const ProfileSettingsTab = () => {
   const [profile, setProfile] = useState({
     name: "",
@@ -65,14 +64,11 @@ const ProfileSettingsTab = () => {
         return;
       }
 
-      const currentUserName = userData.name; // Using name for identification
-
       // Call the API to update user data
       const response = await updateUserApi({
-        name: currentUserName, // Pass the current user's name
-        newName: profile.name, // Send the updated name if changed
-        email: profile.email,  // Send the updated email if changed
-        password: profile.password,  // Send the updated password if changed
+        name: profile.name, // Send the updated name
+        email: profile.email, // Send the updated email
+        password: profile.password, // Send the updated password if changed
       });
 
       console.log("Update successful:", response);
@@ -83,6 +79,9 @@ const ProfileSettingsTab = () => {
         name: profile.name,
         email: profile.email,
       }));
+
+      // Clear password field after saving
+      setProfile((prev) => ({ ...prev, password: "" }));
 
       alert("Settings updated successfully!");
     } catch (error) {
