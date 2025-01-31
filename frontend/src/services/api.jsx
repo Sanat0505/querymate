@@ -175,16 +175,16 @@ export const getUsersApi = async () => {
 let mockDatabase = [];
 export const submitQueryApi = async (query) => {
   try {
-    const newQuery = {
-      id: mockDatabase.length + 1, // Auto-incrementing ID
-      ...query,
-      status: "Pending", // Default status for new queries
-      createdAt: new Date().toISOString(), // Timestamp for the query
-    };
-    mockDatabase.push(newQuery); // Add to the in-memory database
-    console.log("Query added:", newQuery);
-    // localStorage.setItem("mockDatabase",JSON.parse(newQuery))
-    return newQuery;
+    const response = await apiClient.post("/querymate/queries/submitquery", 
+      {queryText:`${query}`},
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("authToken")}`, 
+          // CustomHeader: "YourCustomHeaderValue",      // Example of adding a custom header
+        },
+      }
+    );
+    return response.data;
   } catch (error) {
     console.error("Error submitting query:", error.message);
     throw new Error("Failed to submit query.");
@@ -199,5 +199,45 @@ export const getQueriesApi = async () => {
   } catch (error) {
     console.error("Error retrieving queries:", error.message);
     throw new Error("Failed to retrieve queries.");
+  }
+};
+
+export const createWorkflowApi = async ({ bpmnXml, query, userData, name }) => {
+  try {
+    if (!userData || !userData.id) {
+      throw new Error("User data is missing!"); 
+    }
+
+    const response = await apiClient.post(
+      "/querymate/workflows/create",
+      {
+        bpmnXml,
+        userQuery: query,
+        userEmail: userData.email,
+        userId: userData.id, // ✅ Ensure userId is included
+        name
+      },
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("authToken")}`
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting query:", error.response?.data || error.message);
+    throw new Error("Failed to submit query.");
+  }
+};
+
+export const getWorkflowsApi = async () => {
+  try {
+    const response = await apiClient.get("/querymate/workflows/workflows")
+    // console.log("response",response)
+    return response; // Return the in-memory database
+  } catch (error) {
+    console.error("Error retrieving workflows:", error.message);
+    throw new Error("Failed to retrieve workflows.");
   }
 };

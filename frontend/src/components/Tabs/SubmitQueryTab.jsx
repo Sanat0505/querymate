@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { HfInference } from "@huggingface/inference";
-import { submitQueryApi } from "../../services/api";
+import { submitQueryApi, createWorkflowApi } from "../../services/api";
+import {generateBPMNXML} from "../../services/generateWorkflows"
+import {toast} from "react-toastify"
 
-const SubmitQueryTab = () => {
+const SubmitQueryTab = ({userData}) => {
   const [query, setQuery] = useState("");
+  const [name, setName] = useState("Workflow name");
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -19,44 +22,138 @@ const SubmitQueryTab = () => {
     setIsLoading(true);
     setAnswer("");
 
+    const cleanJsonResponse = (response) => {
+      try {
+        // Remove backticks and any non-JSON text (e.g., "```json" and "```")
+        const jsonStart = response.indexOf("{");
+        const jsonEnd = response.lastIndexOf("}") + 1;
+        const cleanedResponse = response.substring(jsonStart, jsonEnd);
+    
+        // Parse the cleaned JSON
+        return JSON.parse(cleanedResponse);
+      } catch (error) {
+        console.error("Error cleaning/parsing JSON response:", error);
+        throw new Error("Failed to process the JSON response.");
+      }
+    };
+
     try {
-      const classificationResponse = await client.chatCompletion({
-        model: "NousResearch/Hermes-3-Llama-3.1-8B",
-        messages: [
-          {
-            role: "user",
-            content: `Here are some examples:
-- "How can I reset my password?" → Automated
-- "What is your refund policy?" → Automated
-- "Can you check my order status?" → Escalated
-- "I was charged twice for a subscription. Can you process a refund?" → Escalated
+//       const classificationResponse = await client.chatCompletion({
+//         model: "NousResearch/Hermes-3-Llama-3.1-8B",
+//         messages: [
+//           {
+//             role: "user",
+//             content: `You are an intelligent assistant trained to classify customer support queries into two categories: "Automated" or "Escalated." Use the following criteria:
 
-Now classify the following query: ${query}`,
-          },
-        ],
-        max_tokens: 500,
-      });
+// 1. Automated Queries:
+//    -> Queries that can be addressed using predefined responses, FAQs, or standard procedures.
+//    ->Examples:
+//      -> "How can I reset my password?"
+//      -> "What is your refund policy?"
+//      -> "What are your business hours?"
 
-      const classification = classificationResponse.choices[0].message.content.trim().toLowerCase();
+// 2. Escalated Queries:
+//    -> Queries that require human intervention, manual review, or access to account-specific or sensitive information.
+//    -> Examples:
+//      -> "Can you check my order status?"
+//      -> "I was charged twice for a subscription. Can you process a refund?"
+//      -> "My account has been suspended. Can you help?"
 
-      if (classification.includes("automated")) {
-        const chatCompletion = await client.chatCompletion({
-          model: "NousResearch/Hermes-3-Llama-3.1-8B",
-          messages: [{ role: "user", content: query }],
-          max_tokens: 500,
-        });
+// Now, based on the above criteria, classify the following query into one of the two categories:
+// "${query}"
 
-        const generatedAnswer = chatCompletion.choices[0].message.content.trim();
-        setAnswer(generatedAnswer);
-      } else if (classification.includes("escalated")) {
-        await submitQueryApi({ queryText: query, classification: "Escalated" });
-        setAnswer("Your query has been escalated to the admin team for review.");
+// Respond with one word only: "Automated" or "Escalated".
+// `,
+//           },
+//         ],
+//         max_tokens: 500,
+//       });
+
+//       const classification = classificationResponse.choices[0].message.content.trim().toLowerCase();
+
+const res = await submitQueryApi(query)
+      if (res.classification === "Automated") {
+         setAnswer(res?.response);
+        toast.success("Your query has been automatically solved by AI...!")
+      } else if (res.classification==="Escalated") {
+        // await submitQueryApi({ queryText: query, classification: "Escalated" });
+        setAnswer(res?.response);
+        
+        const bpmnDesc = await client.chatCompletion({
+                  model: "NousResearch/Hermes-3-Llama-3.1-8B",
+                  messages: [
+                    {
+                      role: "user",
+                      content: `
+ Role and Objective:
+You are an expert in Business Process Modeling (BPMN). Your task is to generate a structured BPMN workflow based on the following user query. The workflow should comprehensively outline the steps needed to resolve the query and follow BPMN best practices.
+
+Output Format:
+The response must be in JSON format with the following structure:
+
+"elements": An array of objects representing BPMN elements, where each object must include:
+
+"type": One of the BPMN element types ("startEvent", "task", "exclusiveGateway", "endEvent", "subProcess").
+"name": A descriptive, human-readable name for the element.
+"taskType": (Required for "task" elements) The task classification:
+"user" (performed by a human),
+"manual" (offline/manual process),
+"service" (system-automated task).
+"outgoing": (must needed for "exclusiveGateway" and "parallelGateway" elements) An array of indices indicating the next possible steps.
+"elements": (For "subProcess" elements) A nested array containing tasks that belong to the subprocess.
+"sequenceFlows": An array representing connections between BPMN elements. Each object must contain:
+
+"sourceRef": Index of the source element in the "elements" array.
+"targetRef": Index of the target element in the "elements" array.
+BPMN Workflow Design Rules:
+Every process must start with a "startEvent" and end with an "endEvent".
+Decision points should be represented as "exclusiveGateway" or "parallelGateway" with valid "outgoing" connections.
+Tasks should be categorized appropriately as "user", "manual", or "service".
+Ensure correct flow connections using "sequenceFlows", avoiding any broken links or undefined references.
+Example Output:
+{
+  "elements": [
+    { "type": "startEvent", "name": "Start Process" },
+    { "type": "task", "name": "Verify User Request", "taskType": "user" },
+    { "type": "exclusiveGateway", "name": "Is User Verified?", "outgoing": [3, 4] },
+    { "type": "task", "name": "Approve Request", "taskType": "manual" },
+    { "type": "task", "name": "Reject Request", "taskType": "manual" },
+    { "type": "endEvent", "name": "Process Completed" }
+  ],
+  "sequenceFlows": [
+    { "sourceRef": 0, "targetRef": 1 },
+    { "sourceRef": 1, "targetRef": 2 },
+    { "sourceRef": 2, "targetRef": 3 },
+    { "sourceRef": 2, "targetRef": 4 },
+    { "sourceRef": 3, "targetRef": 5 },
+    { "sourceRef": 4, "targetRef": 5 }
+  ]
+}
+Now, generate the BPMN workflow for the following user query:
+User Query: "${query}"
+
+Ensure the output adheres to BPMN best practices and contains a well-structured sequence of tasks, decision points, and workflow elements.
+`
+                    },
+                  ],
+                  max_tokens: 1000,
+                });
+          
+              const classification = bpmnDesc.choices[0].message.content.trim();
+              const cleanedJson = cleanJsonResponse(classification);
+              console.log("classification",cleanedJson);
+              const bpmnXml = await generateBPMNXML(cleanedJson);
+              console.log("bpmnXml",bpmnXml);
+              toast.info("Your query has been escalated to the admin team for review.")
+              await createWorkflowApi({bpmnXml,query,userData, name})
+      
       } else {
         setAnswer("Unexpected classification result. Please try again.");
+        toast.info("Unexpected classification result. Please try again.")
       }
     } catch (error) {
       console.error("Error processing query:", error.message);
-      alert("An error occurred while processing the query.");
+      toast.error("An error occurred while processing the query.");
     } finally {
       setIsLoading(false);
     }

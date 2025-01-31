@@ -3,26 +3,27 @@ const Workflow = require("../models/workflowModel");
 //create workflow
 const createWorkflow = async (req, res) => {
   try {
-    const { id, name, startTime, status, userQuery, bpmnXml, userEmail } = req.body;
+    const { name, userQuery, bpmnXml, userEmail, userId } = req.body; 
 
     const workflow = new Workflow({
-      id:`WF-${Date.now()}`,
+      id: `WF-${Date.now()}`,  
       name,
-      startTime,
-      status:"Active",
+      startTime: new Date().toISOString(), 
+      status: "Active",
       userQuery,
       bpmnXml,
-      userEmail
+      userEmail,
+      userId  
     });
 
     await workflow.save();
-    res
-      .status(201)
-      .json({ message: "Workflow created successfully!", workflow });
+    res.status(201).json({ message: "Workflow created successfully!", workflow });
   } catch (error) {
-    res.status(500).json({ message: "Error creating workflow", error });
+    console.error("Error creating workflow:", error); // ✅ Log the actual error
+    res.status(500).json({ message: "Error creating workflow", error: error.message });
   }
 };
+
 
 // Get all active workflows
 const getActiveWorkflows = async (req, res) => {
@@ -36,6 +37,20 @@ const getActiveWorkflows = async (req, res) => {
   }
 };
 
+// Get All Users (Admin Only)
+const getAllWorkflows = async (req, res) => {
+  try {
+    // if (req.user.role !== "admin") {
+    //   return res.status(403).json({ message: "Forbidden, admin only" });
+    // }
+
+    const workflows = await Workflow.find();
+    res.json(workflows);
+  } catch (error) {
+    console.error("Error during fetching workflows:", error); // Log server error details (for debugging)
+    res.status(500).json({ message: "Failed to fetch workflows, please try again later." });
+  }
+};
 // Update workflow status
 const updateWorkflowStatus = async (req, res) => {
   try {
@@ -91,5 +106,6 @@ module.exports = {
   updateWorkflowStatus,
   getWorkflowDetails,
   createWorkflow,
-  deleteWorkflow
+  deleteWorkflow,
+  getAllWorkflows
 };

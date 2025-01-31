@@ -26,7 +26,7 @@ const SignIn = () => {
       
       if (response.token) {
         // Save the token to localStorage 
-        localStorage.setItem("authToken", response.token.token);
+        localStorage.setItem("authToken", response.token);
         toast.success("Welcome to Querymate..!");
 
         // Redirect the user to the dashboard

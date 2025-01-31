@@ -10,26 +10,21 @@ const submitQuery = async (req, res) => {
   try {
     // Use Hugging Face service to classify the query
     const classification = await classifyQuery(
-      `You are an intelligent assistant trained to classify customer support queries into two categories: "Automated" or "Escalated." Use the following criteria:
+      `
+Classify the following user query into either:
+1️. **Automated Response** - If the issue can be resolved using predefined steps from the knowledge base.  
+2️. **Escalated to Admin** - If the issue requires manual review due to security risks, billing disputes, advanced technical problems, or account restrictions.  
 
-1. Automated Queries:
-   -> Queries that can be addressed using predefined responses, FAQs, or standard procedures.
-   ->Examples:
-     -> "How can I reset my password?"
-     -> "What is your refund policy?"
-     -> "What are your business hours?"
+Ensure that:  
+- **Security, Fraud, or Account Compromise Issues** → Always escalated.  
+- **Billing Disputes (e.g., incorrect charges, failed refunds)** → Always escalated.  
+- **Technical Failures (e.g., data loss, system bugs, API errors)** → Always escalated.  
+- **General Inquiries (FAQs, how-to questions, common errors, simple troubleshooting)** → Automated Response.  
 
-2. Escalated Queries:
-   -> Queries that require human intervention, manual review, or access to account-specific or sensitive information.
-   -> Examples:
-     -> "Can you check my order status?"
-     -> "I was charged twice for a subscription. Can you process a refund?"
-     -> "My account has been suspended. Can you help?"
+Now, categorize the following query accordingly:  
 
-Now, based on the above criteria, classify the following query into one of the two categories:
-"${queryText}"
+"${queryText}"  
 
-Respond with one word only: "Automated" or "Escalated".
 `
     );
     // Save the query in the database
@@ -52,7 +47,9 @@ Respond with one word only: "Automated" or "Escalated".
       queryText,
       classification,
       status: status || "Pending",
-      response: automatedResponse || "Your query has been escalated to the admin team for review.",
+      response:
+        automatedResponse ||
+        "Your query has been escalated to the admin team for review.",
     });
   } catch (error) {
     console.log("eror", error);

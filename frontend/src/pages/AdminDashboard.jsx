@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UsersIcon, ChartBarIcon, ClipboardListIcon, CogIcon, CalendarIcon, BookOpenIcon, LightBulbIcon } from '@heroicons/react/solid';
 import UserManagement from '../components/Tabs/UserManagement';
 import Analytics from '../components/Tabs/Analytics';
@@ -9,10 +9,21 @@ import Tasks from '../components/Tabs/TaskTab';
 import DeployedWorkflows from '../components/Tabs/DeployedWorkflows';
 import WorkflowCreator from '../components/Tabs/CreateWorkflow';
 import Avatar, { genConfig } from "react-nice-avatar";
+import { getWorkflowsApi } from "../services/api";
 
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('create');
+  const [workflows, setWorkflows] = useState();
+
+  useEffect(() => {
+    (async()=>{
+      const response =  await getWorkflowsApi();
+      // console.log("response",response.data)
+      setWorkflows(response.data)
+    })()
+  }, [])
+  
 
   return (
     <div className="container mx-auto p-4 lg:flex">
@@ -106,7 +117,7 @@ const AdminDashboard = () => {
         {activeTab === 'analytics' && <Analytics />}
         {activeTab === 'activity-logs' && <ActivityLogs />}
         {activeTab === 'settings' && <Settings />}
-        {activeTab === 'active-workflows' && <ActiveWorkflows />}
+        {activeTab === 'active-workflows' && <ActiveWorkflows workflows={workflows}/>}
         {activeTab === 'tasks' && <Tasks />}
         {activeTab === 'deployed' && <DeployedWorkflows />}
         {activeTab === 'create' && <WorkflowCreator />}

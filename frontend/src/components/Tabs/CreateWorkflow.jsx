@@ -40,30 +40,40 @@ const WorkflowCreator = () => {
     // e.preventDefault();
     if (!bpmnDesc.trim()) return;
     
-    const userMessage = { role: "user", content: `You are an expert in business process modeling. Generate a process description for a BPMN diagram. If queries are anything, the output should be a structured JSON object of process description for a BPMN diagram with two main parts:
+    const userMessage = { role: "user", content: `Role and Objective:
+You are an expert in Business Process Modeling (BPMN). Your task is to generate a structured BPMN workflow based on the following user query. The workflow should comprehensively outline the steps needed to resolve the query and follow BPMN best practices.
 
-1. "elements": An array of objects where each object describes a BPMN element. Each element has:
-   - "type": The type of BPMN element (e.g., "startEvent", "task", "exclusiveGateway", "endEvent").
-   - "name": A human-readable name for the element.
-   - Additional properties depending on the type:
-     - If the type is "task", include "taskType" (one of "user", "manual", or "service").
-     - If the type is a gateway (e.g., "exclusiveGateway", "parallelGateway", "inclusiveGateway"), include "outgoing", which is an array of indices pointing to the next elements.
-     - If the type is a "subProcess", include an "elements" array describing the tasks inside the sub-process.
+Output Format:
+The response must be in JSON format with the following structure:
 
-2. "sequenceFlows": An array of objects representing the connections between elements. Each object should have:
-   - "sourceRef": The index of the source element in the "elements" array.
-   - "targetRef": The index of the target element in the "elements" array.
+"elements": An array of objects representing BPMN elements, where each object must include:
 
-Example of the required JSON output format:
+"type": One of the BPMN element types ("startEvent", "task", "exclusiveGateway", "endEvent", "subProcess").
+"name": A descriptive, human-readable name for the element.
+"taskType": (Required for "task" elements) The task classification:
+"user" (performed by a human),
+"manual" (offline/manual process),
+"service" (system-automated task).
+"outgoing": (must needed for "exclusiveGateway" and "parallelGateway" elements) An array of indices indicating the next possible steps.
+"elements": (For "subProcess" elements) A nested array containing tasks that belong to the subprocess.
+"sequenceFlows": An array representing connections between BPMN elements. Each object must contain:
 
+"sourceRef": Index of the source element in the "elements" array.
+"targetRef": Index of the target element in the "elements" array.
+BPMN Workflow Design Rules:
+Every process must start with a "startEvent" and end with an "endEvent".
+Decision points should be represented as "exclusiveGateway" or "parallelGateway" with valid "outgoing" connections.
+Tasks should be categorized appropriately as "user", "manual", or "service".
+Ensure correct flow connections using "sequenceFlows", avoiding any broken links or undefined references.
+Example Output:
 {
   "elements": [
-    { "type": "startEvent", "name": "Start" },
-    { "type": "task", "name": "Task 1", "taskType": "user" },
-    { "type": "exclusiveGateway", "name": "Decision", "outgoing": [3, 4] },
-    { "type": "task", "name": "Task A", "taskType": "manual" },
-    { "type": "task", "name": "Task B", "taskType": "user" },
-    { "type": "endEvent", "name": "End" }
+    { "type": "startEvent", "name": "Start Process" },
+    { "type": "task", "name": "Verify User Request", "taskType": "user" },
+    { "type": "exclusiveGateway", "name": "Is User Verified?", "outgoing": [3, 4] },
+    { "type": "task", "name": "Approve Request", "taskType": "manual" },
+    { "type": "task", "name": "Reject Request", "taskType": "manual" },
+    { "type": "endEvent", "name": "Process Completed" }
   ],
   "sequenceFlows": [
     { "sourceRef": 0, "targetRef": 1 },
@@ -74,7 +84,11 @@ Example of the required JSON output format:
     { "sourceRef": 4, "targetRef": 5 }
   ]
 }
-: ${bpmnDesc}` };
+Now, generate the BPMN workflow for the following user description:
+User request: "${bpmnDesc}"
+
+Ensure the output adheres to BPMN best practices and contains a well-structured sequence of tasks, decision points, and workflow elements.
+          ` };
     setMessages((prev) => [...prev, userMessage]);
     setBpmnDesc("");
     setIsLoading(true);
@@ -109,7 +123,7 @@ Example of the required JSON output format:
       client.chatCompletion({
         model: "NousResearch/Hermes-3-Llama-3.1-8B",
         messages: [...messages, userMessage],
-        max_tokens: 1000,
+        max_tokens: 4000,
       }),
       {
         pending: "Generating workflow...", // Pending toast message

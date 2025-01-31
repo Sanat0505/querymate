@@ -49,25 +49,10 @@ const WorkflowDetailsModal = ({ workflow, isOpen, onClose }) => {
 };
 
 
-const ActiveWorkflows = () => {
-  const [workflows, setWorkflows] = useState([
-    { id: "WF-1", name: "Address Update Workflow", startTime: "2024-12-01T09:00:00", status: "Active", userQuery: "How can I update my address?", bpmnXml: `` },
-    { id: "WF-2", name: "Password Reset Workflow", startTime: "2024-12-02T10:00:00", status: "Pending", userQuery: "I forgot my password. How can I reset it?" },
-    { id: "WF-3", name: "Refund Process Workflow", startTime: "2024-12-03T11:30:00", status: "Completed", userQuery: "I need a refund for my last purchase." },
-    { id: "WF-4", name: "Subscription Cancellation Workflow", startTime: "2024-12-04T14:00:00", status: "Active", userQuery: "How can I cancel my subscription?" },
-    { id: "WF-5", name: "Order Status Inquiry Workflow", startTime: "2024-12-05T15:00:00", status: "Active", userQuery: "Can you check the status of my order?" },
-    { id: "WF-6", name: "Delivery Issue Workflow", startTime: "2024-12-06T16:30:00", status: "Pending", userQuery: "My order was delivered to the wrong address." },
-    { id: "WF-7", name: "Technical Support Workflow", startTime: "2024-12-07T18:00:00", status: "Pending", userQuery: "I am unable to access my account." },
-    { id: "WF-8", name: "Billing Issue Workflow", startTime: "2024-12-08T19:00:00", status: "Completed", userQuery: "I was charged twice for a subscription." },
-    { id: "WF-9", name: "Account Deletion Workflow", startTime: "2024-12-09T20:00:00", status: "Active", userQuery: "How can I delete my account?" },
-    { id: "WF-10", name: "Order Cancellation Workflow", startTime: "2024-12-10T08:00:00", status: "Pending", userQuery: "Can I cancel my order before it ships?" },
-    { id: "WF-11", name: "Payment Inquiry Workflow", startTime: "2024-12-11T09:15:00", status: "Active", userQuery: "My payment is not reflecting. What should I do?" },
-    { id: "WF-20", name: "Lost Item Workflow", startTime: "2024-12-20T20:00:00", status: "Active", userQuery: "I lost an item I purchased. What can I do?" },
-    { id: "WF-31", name: "Payment Inquiry Workflow", startTime: "2025-01-23T15:15:37", status: "Active", userQuery: "I have issue regarding payment", bpmnXml:`` },
-  ]);
-
+const ActiveWorkflows = ({workflows}) => {
+  
   const [selectedWorkflow, setSelectedWorkflow] = useState(null);
-
+  if(workflows===[]) {return;}
   const viewDetails = (workflow) => {
     console.log("workflow",workflow)
     setSelectedWorkflow(workflow);
@@ -75,11 +60,11 @@ const ActiveWorkflows = () => {
 
   // Action Handlers
   const cancelWorkflow = (workflowId) => {
-    setWorkflows((prevWorkflows) =>
-      prevWorkflows.map((wf) =>
-        wf.id === workflowId ? { ...wf, status: "Cancelled" } : wf
-      )
-    );
+    // setWorkflows((prevWorkflows) =>
+    //   prevWorkflows.map((wf) =>
+    //     wf.id === workflowId ? { ...wf, status: "Cancelled" } : wf
+    //   )
+    // );
   };
 
   return (
@@ -97,28 +82,28 @@ const ActiveWorkflows = () => {
           </tr>
         </thead>
         <tbody>
-          {workflows.map((workflow, index) => (
+          {workflows?.map((workflow, index) => (
             <tr
               key={index}
               className="hover:bg-gray-100 dark:hover:bg-gray-700"
             >
-              <td className="border px-4 py-2">{workflow.id}</td>
-              <td className="border px-4 py-2">{workflow.name}</td>
+              <td className="border px-4 py-2">{workflow?.id}</td>
+              <td className="border px-4 py-2">{workflow?.name}</td>
               <td className="border px-4 py-2">
-                {new Date(workflow.startTime).toLocaleString()}
+                {workflow?.startTime}
               </td>
-              <td className="border px-4 py-2">{workflow.userQuery}</td>
+              <td className="border px-4 py-2">{workflow?.userQuery}</td>
               <td className="border px-4 py-2">
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    workflow.status === "Active"
+                    workflow?.status === "Active"
                       ? "bg-green-100 text-green-800"
                       : workflow.status === "Pending"
                       ? "bg-yellow-100 text-yellow-800"
                       : "bg-gray-100 text-gray-800"
                   }`}
                 >
-                  {workflow.status}
+                  {workflow?.status}
                 </span>
               </td>
               <td className="border px-4 py-2">
@@ -128,9 +113,9 @@ const ActiveWorkflows = () => {
                 >
                   View Details
                 </button>
-                {workflow.status !== "Completed" && workflow.status !== "Cancelled" && (
+                {workflow?.status !== "Completed" && workflow?.status !== "Cancelled" && (
                   <button
-                    onClick={() => cancelWorkflow(workflow.id)}
+                    onClick={() => cancelWorkflow(workflow?.id)}
                     className="bg-red-500 text-white px-2 py-1 rounded"
                   >
                     Cancel

@@ -40,7 +40,7 @@ export const generateBPMNXML = (processDescription) => {
           return `
           <bpmn:${element.type} id="${id}" name="${element.name}">
             <bpmn:incoming>Flow_${index}</bpmn:incoming>
-            ${element.outgoing
+            ${element?.outgoing
               .map((out) => `<bpmn:outgoing>Flow_${out}</bpmn:outgoing>`)
               .join("\n")}
           </bpmn:${element.type}>`;
@@ -75,7 +75,7 @@ export const generateBPMNXML = (processDescription) => {
       console.error("Invalid flow reference:", flow);
     }
     return isValid;
-  });
+  }); 
 
   const sequenceFlows = validSequenceFlows
     .map(

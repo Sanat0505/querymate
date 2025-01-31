@@ -63,7 +63,7 @@ import React, { useEffect, useRef } from 'react';
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import { BpmnPropertiesPanelModule, BpmnPropertiesProviderModule } from 'bpmn-js-properties-panel';
 import { useSelector } from "react-redux";
-
+import {toast} from "react-toastify"
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
@@ -222,7 +222,6 @@ let diagramXML = `<?xml version="1.0" encoding="UTF-8"?>
     });
 
     bpmnModelerRef.current = bpmnModeler;
-    console.log("nnnnnn",bpmnXml)
     // Load initial diagram
     const loadInitialDiagram = async () => {
       try {
@@ -232,7 +231,7 @@ let diagramXML = `<?xml version="1.0" encoding="UTF-8"?>
           await bpmnModeler.importXML(bpmnXml);
         }
 
-        console.log('Diagram loaded successfully.');
+        // console.log('Diagram loaded successfully.');
       } catch (err) {
         console.error('Failed to load initial diagram:', err);
       }
@@ -266,10 +265,10 @@ let diagramXML = `<?xml version="1.0" encoding="UTF-8"?>
       </bpmn:definitions>`;
     try {
       await bpmnModelerRef.current.importXML(newDiagramXML);
-      console.log("xmlll",bpmnXml)
-      console.log('New diagram created successfully.');
+      // console.log("xmlll",bpmnXml)
+      // console.log('New diagram created successfully.');
     } catch (err) {
-      console.error('Error creating new diagram:', err);
+      toast.error('Error creating new diagram:', err);
     }
   };
 

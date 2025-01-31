@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { updateUserApi } from "../../services/api"; 
-const ProfileSettingsTab = () => {
+const ProfileSettingsTab = ({userData}) => {
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -106,7 +106,7 @@ const ProfileSettingsTab = () => {
               id="name"
               type="text"
               name="name"
-              value={profile.name}
+              value={userData?.name}
               onChange={handleProfileChange}
               className="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
@@ -119,7 +119,7 @@ const ProfileSettingsTab = () => {
               id="email"
               type="email"
               name="email"
-              value={profile.email}
+              value={userData?.email}
               onChange={handleProfileChange}
               className="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
@@ -132,7 +132,7 @@ const ProfileSettingsTab = () => {
               id="password"
               type="password"
               name="password"
-              value={profile.password}
+              value={userData?.password}
               onChange={handleProfileChange}
               className="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />

@@ -5,14 +5,18 @@ import ProfileSettingsTab from '../components/Tabs/ProfileSettingsTab';
 import SupportTab from '../components/Tabs/SupportTab';
 import SubmitQueryTab from '../components/Tabs/SubmitQueryTab';
 import Avatar, { genConfig } from "react-nice-avatar";
+import { jwtDecode } from "jwt-decode";
 
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState('submit-query');
   const [avatarConfig, setAvatarConfig] = useState(null);
+  const [userData, setUserData] = useState();
 
   // Load avatar configuration from localStorage or generate a new one
   useEffect(() => {
     const savedConfig = localStorage.getItem('userAvatarConfig');
+    const decoded = jwtDecode(localStorage.getItem('authToken'));
+    setUserData(decoded);
     if (savedConfig) {
       setAvatarConfig(JSON.parse(savedConfig));
     } else {
@@ -69,10 +73,10 @@ const UserDashboard = () => {
           )}
         </div>
 
-        {activeTab === 'recent-activity' && <RecentActivityTab />}
-        {activeTab === 'profile-settings' && <ProfileSettingsTab />}
+        {activeTab === 'recent-activity' && <RecentActivityTab userData={userData}/>}
+        {activeTab === 'profile-settings' && <ProfileSettingsTab userData={userData}/>}
         {activeTab === 'support' && <SupportTab />}
-        {activeTab === 'submit-query' && <SubmitQueryTab />}
+        {activeTab === 'submit-query' && <SubmitQueryTab userData={userData}/>}
       </div>
     </div>
   );
