@@ -22,7 +22,7 @@ router.get("/workflows", getAllWorkflows);
 router.put("/:workflowId/status",authMiddleware, updateWorkflowStatus);
 
 // Get workflow details
-router.get("/:workflowId",authMiddleware, getWorkflowDetails);
+router.get("/:workflowId", getWorkflowDetails);
 
 //delete workflow
 router.delete("/:workflowId",authMiddleware, deleteWorkflow);

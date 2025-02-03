@@ -10,7 +10,7 @@ const router = express.Router();
 router.get("/", getAllTasks);
 
 // Update task status
-router.put("/:taskId/status", updateTaskStatus);
+router.put("/status", updateTaskStatus);
 
 // Send resolution to user
 router.post("/:taskId/resolve", sendResolutionEmail);

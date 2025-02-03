@@ -1,29 +1,48 @@
 const Workflow = require("../models/workflowModel");
+const Task = require("../models/tasksModal");
+const { v4: uuidv4 } = require("uuid");
 
 //create workflow
 const createWorkflow = async (req, res) => {
   try {
-    const { name, userQuery, bpmnXml, userEmail, userId } = req.body; 
+    const { name, userQuery, parsedBpmn, bpmnXml, userEmail, userId } =
+      req.body;
 
     const workflow = new Workflow({
-      id: `WF-${Date.now()}`,  
+      id: `WF-${Date.now()}`,
       name,
-      startTime: new Date().toISOString(), 
+      startTime: new Date().toISOString(),
       status: "Active",
       userQuery,
       bpmnXml,
       userEmail,
-      userId  
+      userId,
+      parsedBpmn,
     });
 
     await workflow.save();
-    res.status(201).json({ message: "Workflow created successfully!", workflow });
+    const tasks = parsedBpmn.elements
+      .filter((element) => element.type === "task") // Only extract BPMN tasks
+      .map((task, index) => ({
+        id:`Task-${uuidv4()}`,
+        workflowId: workflow.id, // Associate with the workflow
+        name: task.name,
+        taskType: task.taskType,
+        status: "Pending",
+        assignee: "Admin",
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      }));
+      await Task.insertMany(tasks);
+    res
+      .status(201)
+      .json({ message: "Workflow created successfully!", workflow });
   } catch (error) {
-    console.error("Error creating workflow:", error); // ✅ Log the actual error
-    res.status(500).json({ message: "Error creating workflow", error: error.message });
+    console.error("Error creating workflow:", error);
+    res
+      .status(500)
+      .json({ message: "Error creating workflow", error: error.message });
   }
 };
-
 
 // Get all active workflows
 const getActiveWorkflows = async (req, res) => {
@@ -48,7 +67,9 @@ const getAllWorkflows = async (req, res) => {
     res.json(workflows);
   } catch (error) {
     console.error("Error during fetching workflows:", error); // Log server error details (for debugging)
-    res.status(500).json({ message: "Failed to fetch workflows, please try again later." });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch workflows, please try again later." });
   }
 };
 // Update workflow status
@@ -93,19 +114,19 @@ const getWorkflowDetails = async (req, res) => {
 };
 // Delete a workflow
 const deleteWorkflow = async (req, res) => {
-    try {
-      const { workflowId } = req.params;
-      await Workflow.findOneAndDelete({ id: workflowId });
-      res.json({ message: "Workflow deleted successfully" });
-    } catch (error) {
-      res.status(500).json({ message: "Error deleting workflow", error });
-    }
-  };
+  try {
+    const { workflowId } = req.params;
+    await Workflow.findOneAndDelete({ id: workflowId });
+    res.json({ message: "Workflow deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting workflow", error });
+  }
+};
 module.exports = {
   getActiveWorkflows,
   updateWorkflowStatus,
   getWorkflowDetails,
   createWorkflow,
   deleteWorkflow,
-  getAllWorkflows
+  getAllWorkflows,
 };

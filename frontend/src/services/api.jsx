@@ -202,7 +202,7 @@ export const getQueriesApi = async () => {
   }
 };
 
-export const createWorkflowApi = async ({ bpmnXml, query, userData, name }) => {
+export const createWorkflowApi = async ({ bpmnXml, query, userData, name, cleanedJson }) => {
   try {
     if (!userData || !userData.id) {
       throw new Error("User data is missing!"); 
@@ -214,8 +214,9 @@ export const createWorkflowApi = async ({ bpmnXml, query, userData, name }) => {
         bpmnXml,
         userQuery: query,
         userEmail: userData.email,
-        userId: userData.id, // ✅ Ensure userId is included
-        name
+        userId: userData.id, 
+        name,
+        parsedBpmn:cleanedJson,
       },
       {
         headers: {
@@ -239,5 +240,45 @@ export const getWorkflowsApi = async () => {
   } catch (error) {
     console.error("Error retrieving workflows:", error.message);
     throw new Error("Failed to retrieve workflows.");
+  }
+};
+export const getWorkflowApi = async (workflowId) => {
+  try {
+    const response = await apiClient.get(`/querymate/workflows/${workflowId}`)
+    // console.log("response",response)
+    return response; // Return the in-memory database
+  } catch (error) {
+    console.error("Error retrieving workflows:", error.message);
+    throw new Error("Failed to retrieve workflows.");
+  }
+};
+
+export const getTasksApi = async () => {
+  try {
+    const response = await apiClient.get("/querymate/tasks/")
+    console.log("responseTasks",response)
+    return response; 
+  } catch (error) {
+    console.error("Error retrieving tasks:", error.message);
+    throw new Error("Failed to retrieve tasks.");
+  }
+};
+
+export const updateTaskStatusApi = async (taskId,status) => {
+  try {
+    const response = await apiClient.put("/querymate/tasks/status", 
+      {taskId:`${taskId}`,
+    status:`${status}`},
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("authToken")}`, 
+          // CustomHeader: "YourCustomHeaderValue",      // Example of adding a custom header
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting query:", error.message);
+    throw new Error("Failed to submit query.");
   }
 };

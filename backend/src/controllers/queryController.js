@@ -21,6 +21,112 @@ Ensure that:
 - **Technical Failures (e.g., data loss, system bugs, API errors)** → Always escalated.  
 - **General Inquiries (FAQs, how-to questions, common errors, simple troubleshooting)** → Automated Response.  
 
+  Based on below queries, you can classify accordingly,
+  "Query	Classification"
+"How do I reset my password?"->Automated
+"I forgot my username, how can I recover it?"->Automated
+"Why is my account locked?"	->Escalated
+"I am unable to log in despite entering the correct credentials."->	Escalated
+"Can I change my registered email address?"	->Automated
+"My 2FA code is not working, what should I do?"->	Escalated
+"How do I enable two-factor authentication?"->	Automated
+"How do I delete my account permanently?"	->Escalated
+"How do I update my payment method?"->	Automated
+"I was charged twice for my subscription. Can I get a refund?"	->Escalated
+"Why is my payment failing?"	->Escalated
+"How do I cancel my subscription?"	->Automated
+"Can I change my billing cycle?"	->Automated
+"How do I get an invoice for my purchase?"	->Automated
+"I canceled my subscription, but I was still charged."	->Escalated
+"Can I get a refund for my last payment?"->	Escalated
+"Where is my order?"	->Automated
+"Can I track my order?"	->Automated
+"My order is delayed, what should I do?"	->Escalated
+"Can I change the shipping address for my order?"	->Escalated
+"How long does delivery take?"	->Automated
+"I received the wrong item, what should I do?"	->Escalated
+"How do I cancel my order?"	->Automated
+"Do you offer international shipping?"	->Automated
+"The website is not loading for me. What should I do?"	->Automated
+"Why am I getting an error while making a payment?"->	Escalated
+"My app keeps crashing, how can I fix it?"	->Escalated
+"How do I report a bug in the app?"	->Escalated
+"How do I clear my cache and cookies?"	->Automated
+"Why is my account not syncing across devices?"->	Escalated
+"How do I update my profile details?"->	Automated
+"Can I export my data from your platform?"	->Automated
+"How do I use feature X?"->	Automated
+"Can I integrate this product with my existing software?"->	Escalated
+"Is there an API available?"	->Automated
+"Can you provide a custom solution for my company?"->	Escalated
+"What are the pricing plans for your services?"	->Automated
+"What are your working hours?"	->Automated
+"How do I contact customer support?"	->Automated
+"Do you have a physical store?"	->Automated
+"Can I schedule a call with your support team?"->	Escalated
+"Do you offer discounts for students?"->	Automated
+"How do I unsubscribe from emails?"->	Automated
+"How do I reset my password?"	->Automated
+"Can I change my email address?"	->Automated
+"Why was my account locked?"	->Escalated
+"I forgot my username, how do I recover it?"	->Automated
+"How can I enable two-factor authentication?"	->Automated
+"My login attempts keep failing, what should I do?"	->Escalated
+"How do I delete my account permanently?"	->Escalated
+"Why is my two-factor authentication not working?"	->Escalated
+"How do I change my phone number for login verification?"	->Automated
+"I keep getting a CAPTCHA verification, how can I disable it?"	->Automated
+"How can I update my payment method?"	->Automated
+"Can I switch my billing cycle from monthly to yearly?"	->Automated
+"I was charged twice, how do I get a refund?"	->Escalated
+"Why is my payment failing?"	->Escalated
+"Can I get an invoice for my last purchase?"->	Automated
+"How do I cancel my subscription?"	->Automated
+"I canceled my plan, but I was still charged."	->Escalated
+"Do you offer refunds for accidental purchases?"	->Escalated
+"How do I redeem a gift card or promo code?"	->Automated
+"Can I change my credit card details for auto-renewal?"->	Automated
+"Why is the website not loading?"->	Automated
+"How do I report a bug in the app?"	->Escalated
+"The app keeps crashing on my phone, what should I do?"->	Escalated
+"Why am I getting a 500 error when trying to log in?"->	Escalated
+"How can I clear my cache and cookies?"->	Automated
+"Why does my session keep expiring?"->	Automated
+"I lost all my saved data, can it be recovered?"	->Escalated
+"Why am I getting an invalid token error?"	->Escalated
+"How do I enable dark mode in the app?"	->Automated
+"Why is my two-factor authentication not sending a code?"->	Escalated
+"Where is my order?"->	Automated
+"How long does shipping take?"->	Automated
+"Can I track my order?"->	Automated
+"My package hasn’t arrived, what should I do?"->	Escalated
+"I received the wrong item, can I get a replacement?"->	Escalated
+"Can I change my shipping address after placing the order?"->	Escalated
+"My order is marked as delivered but I haven’t received it."->	Escalated
+"How do I return a product?"->	Automated
+"Do you offer international shipping?"->	Automated
+"Can I schedule a delivery for a specific date?"->	Automated
+"How do I use feature X?"->	Automated
+"Can I export my data from your platform?"->	Automated
+"Do you offer API access?"->	Automated
+"Can I integrate this product with my existing software?"->	Escalated
+"Do you offer discounts for students or non-profits?"->	Automated
+"How do I get early access to beta features?"->	Escalated
+"Do you offer a free trial?"->	Automated
+"Can you provide a custom plan for enterprise clients?"->	Escalated
+"What happens if I exceed my usage limit?"	->Automated
+"How do I request a demo of the product?"->	Automated
+"What are your working hours?"	->Automated
+"How do I contact customer support?"	->Automated
+"Do you have a physical store?"	->Automated
+"Can I schedule a call with your support team?"->	Escalated
+"Do you have a refund policy?"->	Automated
+"Can I speak with a manager?"	->Escalated
+"What happens to my data after I delete my account?"	->Escalated
+"Do you comply with GDPR regulations?"->	Escalated
+"How do I unsubscribe from your emails?"->	Automated
+"Where is your company headquartered?"->	Automated
+
 Now, categorize the following query accordingly:  
 
 "${queryText}"  

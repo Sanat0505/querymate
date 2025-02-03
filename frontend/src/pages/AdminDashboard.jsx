@@ -9,18 +9,21 @@ import Tasks from '../components/Tabs/TaskTab';
 import DeployedWorkflows from '../components/Tabs/DeployedWorkflows';
 import WorkflowCreator from '../components/Tabs/CreateWorkflow';
 import Avatar, { genConfig } from "react-nice-avatar";
-import { getWorkflowsApi } from "../services/api";
+import { getWorkflowsApi,getTasksApi } from "../services/api";
 
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('create');
   const [workflows, setWorkflows] = useState();
+  const [tasks, setTasks] = useState();
 
   useEffect(() => {
     (async()=>{
-      const response =  await getWorkflowsApi();
+      const workflows =  await getWorkflowsApi();
+      const tasks =  await getTasksApi();
       // console.log("response",response.data)
-      setWorkflows(response.data)
+      setWorkflows(workflows.data)
+      setTasks(tasks.data)
     })()
   }, [])
   
@@ -118,7 +121,7 @@ const AdminDashboard = () => {
         {activeTab === 'activity-logs' && <ActivityLogs />}
         {activeTab === 'settings' && <Settings />}
         {activeTab === 'active-workflows' && <ActiveWorkflows workflows={workflows}/>}
-        {activeTab === 'tasks' && <Tasks />}
+        {activeTab === 'tasks' && <Tasks tasks={tasks} updateTasks={setTasks}/>}
         {activeTab === 'deployed' && <DeployedWorkflows />}
         {activeTab === 'create' && <WorkflowCreator />}
       </div>

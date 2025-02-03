@@ -145,7 +145,7 @@ Ensure the output adheres to BPMN best practices and contains a well-structured 
               const bpmnXml = await generateBPMNXML(cleanedJson);
               console.log("bpmnXml",bpmnXml);
               toast.info("Your query has been escalated to the admin team for review.")
-              await createWorkflowApi({bpmnXml,query,userData, name})
+              await createWorkflowApi({bpmnXml,query,userData, name,cleanedJson})
       
       } else {
         setAnswer("Unexpected classification result. Please try again.");

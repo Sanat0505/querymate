@@ -26,6 +26,7 @@ const WorkflowSchema = new mongoose.Schema(
       require: false,
     },
     userEmail: { type: String, required: true },
+    solution: { type: String },
   },
   { timestamps: true }
 );
