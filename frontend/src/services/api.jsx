@@ -2,8 +2,8 @@ import axios from "axios";
 
 // Configure Axios instance for APIs calling
 const apiClient = axios.create({
-  // baseURL: "https://querymate-backend-new.vercel.app",
-  baseURL: "http://localhost:3001",
+  baseURL: "https://querymate-backend-new.vercel.app",
+  // baseURL: "http://localhost:3001",
   headers: {
     "Content-Type": "application/json",
     // Add Authorization header if token exists
