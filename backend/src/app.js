@@ -9,11 +9,21 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:3000", // Ensure that the frontend React app is allowed to make requests
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers for cross-origin requests
+  origin: function (origin, callback) {
+    const allowedOrigins = ["https://tb-querymate.vercel.app/", "http://localhost:3000"];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: "GET, POST, PUT, DELETE",
+  allowedHeaders: "Content-Type, Authorization",
   credentials: true,
 };
+
+app.use(cors(corsOptions));
+
 
 // Apply CORS middleware globally
 app.use(cors(corsOptions));
@@ -32,9 +42,9 @@ app.use("/querymate/tasks", tasksRoutes);
 
 // For root route (optional, for testing server health)
 app.get("/", (_req, res) => {
-  res.send("Server is running");
+  res.send(`Server is running ${process.env.PORT}`);
 });
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.send("Server is running on Vercel!");
 });
 

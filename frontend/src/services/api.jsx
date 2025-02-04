@@ -3,11 +3,12 @@ import axios from "axios";
 // Configure Axios instance for APIs calling
 const apiClient = axios.create({
   baseURL: "https://querymate-backend-new.vercel.app",
+  // baseURL: "http://localhost:3001",
   headers: {
     "Content-Type": "application/json",
     // Add Authorization header if token exists
     Authorization: localStorage.getItem("token") 
-      ? `Bearer ${localStorage.getItem("token")}` 
+      ? `Token ${localStorage.getItem("token")}` 
       : "",
   },
 });
@@ -35,6 +36,7 @@ const handleError = (error) => {
 export const signUpApi = async (formData) => {
   try {
     const response = await apiClient.post("/querymate/auth/register", formData);
+    console.log("response",response)
     return response.data;
   } catch (error) {
     handleError(error);
