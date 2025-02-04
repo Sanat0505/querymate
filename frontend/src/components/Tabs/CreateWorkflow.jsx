@@ -217,15 +217,15 @@ Ensure the output adheres to BPMN best practices and contains a well-structured 
     <div className="w-full h-auto lg:h-[88vh] max-h-[88vh] overflow-y-scroll bg-white dark:bg-gray-800 shadow-lg p-6 rounded-lg">
 
       <h1 className="text-center text-2xl font-bold my-4">Workflow Creator</h1>
-      <div className="chat-container min-h-5" style={{ overflowY: "auto", border: "1px solid #ccc", padding: "10px", borderRadius: "4px" }}>
+      {/* <div className="chat-container min-h-5" style={{ overflowY: "auto", border: "1px solid #ccc", padding: "10px", borderRadius: "4px" }}> */}
         {/* {messages.map((msg, index) => (
           <div key={index} className={`message ${msg.role === "user" ? "user-message" : "bot-message"}`}>
             <strong>{msg.role === "user" ? "You" : "Bot"}:</strong> {msg.content}
           </div>
         ))} */}
-        {isLoading && <div className="loading-message">Generating workflow...</div>}
+        {/* {isLoading && <div className="loading-message">Generating workflow...</div>}
         <div ref={chatEndRef}></div>
-      </div>
+      </div> */}
       <textarea
         // value={bpmnDesc}
         onChange={(e) => setBpmnDesc(e.target.value)}

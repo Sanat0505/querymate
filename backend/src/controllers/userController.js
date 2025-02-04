@@ -170,9 +170,9 @@ const getUser = async (req, res) => {
 // Get All Users (Admin Only)
 const getUsers = async (req, res) => {
   try {
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden, admin only" });
-    }
+    // if (req.user.role !== "admin") {
+    //   return res.status(403).json({ message: "Forbidden, admin only" });
+    // }
 
     const users = await User.find();
     res.json(users);

@@ -34,5 +34,8 @@ app.use("/querymate/tasks", tasksRoutes);
 app.get("/", (_req, res) => {
   res.send("Server is running");
 });
+app.get("/", (req, res) => {
+  res.send("Server is running on Vercel!");
+});
 
 module.exports = app;

@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Configure Axios instance for APIs calling
 const apiClient = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: "https://querymate-backend-new.vercel.app",
   headers: {
     "Content-Type": "application/json",
     // Add Authorization header if token exists
@@ -118,7 +118,7 @@ export const deleteUserApi = async (userId) => {
     if (!token) throw new Error("Not logged in");
 
     await apiClient.delete(`/querymate/auth/delete/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Token ${token}` },
     });
   } catch (error) {
     handleError(error);
@@ -151,10 +151,9 @@ export const getUsersApi = async () => {
     if (!token) throw new Error("User is not authenticated");
 
     const response = await apiClient.get("/querymate/auth/users", {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Token ${token}` },
     });
 
-    console.log("Fetched Users:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error.message);
@@ -244,7 +243,7 @@ export const getWorkflowsApi = async () => {
 };
 export const getWorkflowApi = async (workflowId) => {
   try {
-    const response = await apiClient.get(`/querymate/workflows/${workflowId}`)
+    const response = await apiClient.get(`/querymate/tasks/${workflowId}`)
     // console.log("response",response)
     return response; // Return the in-memory database
   } catch (error) {

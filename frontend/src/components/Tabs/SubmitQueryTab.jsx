@@ -28,7 +28,6 @@ const SubmitQueryTab = ({userData}) => {
         const jsonStart = response.indexOf("{");
         const jsonEnd = response.lastIndexOf("}") + 1;
         const cleanedResponse = response.substring(jsonStart, jsonEnd);
-    
         // Parse the cleaned JSON
         return JSON.parse(cleanedResponse);
       } catch (error) {
@@ -85,7 +84,7 @@ const res = await submitQueryApi(query)
                     {
                       role: "user",
                       content: `
- Role and Objective:
+Role and Objective:
 You are an expert in Business Process Modeling (BPMN). Your task is to generate a structured BPMN workflow based on the following user query. The workflow should comprehensively outline the steps needed to resolve the query and follow BPMN best practices.
 
 Output Format:
@@ -129,11 +128,11 @@ Example Output:
     { "sourceRef": 4, "targetRef": 5 }
   ]
 }
-Now, generate the BPMN workflow for the following user query:
-User Query: "${query}"
+Now, generate the BPMN workflow for the following user description:
+User request: "${query}"
 
 Ensure the output adheres to BPMN best practices and contains a well-structured sequence of tasks, decision points, and workflow elements.
-`
+          `
                     },
                   ],
                   max_tokens: 1000,

@@ -19,25 +19,25 @@ const modalStyle = {
   p: 4,
 };
 
-const UserManagement = () => {
-  const [users, setUsers] = useState([]);
+const UserManagement = ({users,setUsers}) => {
+  // const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   // Fetch users on component mount
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const fetchedUsers = await getUsersApi();
-        setUsers(fetchedUsers);
-      } catch (error) {
-        setError("Failed to fetch users");
-        console.error("Fetch error:", error);
-      }
-    };
-    fetchUsers();
-  }, []);
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     try {
+  //       const fetchedUsers = await getUsersApi();
+  //       setUsers(fetchedUsers);
+  //     } catch (error) {
+  //       setError("Failed to fetch users");
+  //       console.error("Fetch error:", error);
+  //     }
+  //   };
+  //   fetchUsers();
+  // }, []);
 
   // Handle delete confirmation
   const handleDeleteConfirmation = (userId) => {
@@ -82,7 +82,7 @@ const UserManagement = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+          {users?.map((user) => (
             <tr key={user._id}>
               <td className="py-2 px-4 text-center">{user.name}</td>
               <td className="py-2 px-4 text-center">{user.email}</td>

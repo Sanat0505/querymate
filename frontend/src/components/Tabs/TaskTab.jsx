@@ -51,7 +51,7 @@ const Tasks = ({ tasks, updateTasks }) => {
       const workflowDetails = await getWorkflowApi(currentTask.workflowId);
       console.log("workflowDetails",workflowDetails)
 
-      const remainingTasks = workflowDetails.tasks.filter(
+      const remainingTasks = workflowDetails.data.filter(
         (task) => task.status !== "Completed"
       );
 

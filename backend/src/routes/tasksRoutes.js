@@ -3,11 +3,13 @@ const {
   getAllTasks,
   updateTaskStatus,
   sendResolutionEmail,
+  getTasksByWorkflowId
 } = require("../controllers/tasksControllers");
 const router = express.Router();
 
 // Get all tasks
 router.get("/", getAllTasks);
+router.get("/:workflowId", getTasksByWorkflowId);
 
 // Update task status
 router.put("/status", updateTaskStatus);

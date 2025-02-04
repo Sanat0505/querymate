@@ -71,9 +71,24 @@ const sendResolutionEmail = async (req, res) => {
     res.status(500).json({ message: "Error sending resolution email..!", error });
   }
 };
+const getTasksByWorkflowId = async (req, res) => {
+  try {
+    const { workflowId } = req.params;
+    const tasks = await Task.find({ workflowId });
+
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).json({ message: "No tasks found for this workflow." });
+    }
+
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching tasks", error });
+  }
+};
 
 module.exports = {
     getAllTasks,
     updateTaskStatus,
-    sendResolutionEmail
+    sendResolutionEmail,
+    getTasksByWorkflowId
   };
