@@ -8,22 +8,28 @@ const tasksRoutes = require("./routes/tasksRoutes");
 const app = express();
 
 // CORS configuration
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     const allowedOrigins = [
+//       "https://tb-querymate.vercel.app/",
+//       "http://localhost:3000",
+//     ];
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   methods: "GET, POST, PUT, DELETE",
+//   allowedHeaders: "Content-Type, Authorization",
+//   // credentials: true,
+// };
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = ["https://tb-querymate.vercel.app/", "http://localhost:3000"];
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: "GET, POST, PUT, DELETE",
+  origin: "*", // Allow all origins temporarily (for debugging)
+  methods: "GET, POST, PUT, DELETE, OPTIONS",
   allowedHeaders: "Content-Type, Authorization",
-  credentials: true,
+  // credentials: true, // If using cookies or authentication headers
 };
-
-app.use(cors(corsOptions));
-
 
 // Apply CORS middleware globally
 app.use(cors(corsOptions));
@@ -41,9 +47,9 @@ app.use("/querymate/workflows", workflowRoutes);
 app.use("/querymate/tasks", tasksRoutes);
 
 // For root route (optional, for testing server health)
-app.get("/", (_req, res) => {
-  res.send(`Server is running ${process.env.PORT}`);
-});
+// app.get("/", (_req, res) => {
+//   res.send(`Server is running ${process.env.PORT}`);
+// });
 app.get("/", (_req, res) => {
   res.send("Server is running on Vercel!");
 });

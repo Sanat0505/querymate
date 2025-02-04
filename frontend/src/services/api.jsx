@@ -2,8 +2,8 @@ import axios from "axios";
 
 // Configure Axios instance for APIs calling
 const apiClient = axios.create({
-  baseURL: "https://querymate-backend-new.vercel.app",
-  // baseURL: "http://localhost:3001",
+  // baseURL: "https://querymate-backend-new.vercel.app",
+  baseURL: "http://localhost:3001",
   headers: {
     "Content-Type": "application/json",
     // Add Authorization header if token exists
@@ -174,10 +174,15 @@ export const getUsersApi = async () => {
 //   }
 // };
 let mockDatabase = [];
-export const submitQueryApi = async (query) => {
+export const submitQueryApi = async (query,classification,automatedResponse,userId) => {
   try {
     const response = await apiClient.post("/querymate/queries/submitquery", 
-      {queryText:`${query}`},
+      {
+        queryText:`${query}`,
+        classification:`${classification}`,
+        automatedResponse:`${automatedResponse}`,
+        userId:`${userId}`,
+    },
       {
         headers: {
           Authorization: `Token ${localStorage.getItem("authToken")}`, 

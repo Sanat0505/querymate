@@ -1,7 +1,7 @@
 const { HfInference } = require("@huggingface/inference");
 
 const classifyQuery = async (queryText) => {
-  const client = new HfInference("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");
+  const client = new HfInference("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");
   try {
     const chatCompletion = await client.chatCompletion({
       model: "NousResearch/Hermes-3-Llama-3.1-8B",
