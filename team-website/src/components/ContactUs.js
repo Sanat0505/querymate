@@ -6,7 +6,7 @@ function ContactUs() {
   return (
     <div
       id="contact"
-      className="min-h-screen bg-silver_main flex items-center justify-center rounded-lg"
+      className="min-h-screen bg-silver_main flex items-center justify-center rounded-lg border-2 border-black"
     >
       <div className=" w-full p-8">
         <h2 className="lg:text-4xl text-3xl font-bold text-center text-black mb-8">
