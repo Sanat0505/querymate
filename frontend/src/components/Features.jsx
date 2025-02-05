@@ -5,9 +5,12 @@ const Features = () => {
   return (
     <section id="features" className="bg-gray-50 dark:bg-gray-900 py-16">
       <div className="max-w-screen-xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">
+        <h2 className="text-5xl font-extrabold text-center text-gray-900 dark:text-white mb-12">
           Why Choose <span className="text-primary-500">Querymate</span>?
         </h2>
+        {/* <h2 className="text-5xl font-extrabold text-gray-900 dark:text-white">
+        Why Choose <span className="text-primary-500">Querymate</span>?
+        </h2> */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
           {/* Feature 1 */}
           <div className="p-8 bg-white dark:bg-gray-800 shadow-lg rounded-xl transform hover:scale-105 transition duration-300 ease-in-out">

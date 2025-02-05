@@ -3,15 +3,17 @@ import { HfInference } from "@huggingface/inference";
 import { submitQueryApi, createWorkflowApi } from "../../services/api";
 import {generateBPMNXML} from "../../services/generateWorkflows"
 import {toast} from "react-toastify"
+// const Groq = require("groq-sdk");
+// const groq = new Groq({ apiKey: process.env.REACT_APP_GROQ_API_KEY });
+const client = new HfInference(`${process.env.REACT_APP_HFINTERFACETOKEN}`);
+const client2 = new HfInference(`${process.env.REACT_APP_HFINTERFACETOKEN2}`);
 
 const SubmitQueryTab = ({userData}) => {
-  console.log("userData",userData)
   const [query, setQuery] = useState("");
   const [name, setName] = useState("Workflow name");
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const client = new HfInference(`${process.env.REACT_APP_HFINTERFACETOKEN}`);
 
   const userSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +24,7 @@ const SubmitQueryTab = ({userData}) => {
 
     setIsLoading(true);
     setAnswer("");
-
+// console.log("${process.env.REACT_APP_HFINTERFACETOKEN2}",`${process.env.REACT_APP_HFINTERFACETOKEN2}`)
     const cleanJsonResponse = (response) => {
       try {
         // Remove backticks and any non-JSON text (e.g., "```json" and "```")
@@ -175,10 +177,10 @@ Respond with one word only: "Automated" or "Escalated".
       const classification = classificationResponse.choices[0].message.content.trim().toLowerCase();
 
 
-      console.log(classification,"classification")
+      // console.log(classification,"classification")
 
       if (classification === "automated") {
-        console.log('..............')
+        // console.log('..............')
         const res = await client.chatCompletion({
           model: "NousResearch/Hermes-3-Llama-3.1-8B",
           messages: [
@@ -193,7 +195,7 @@ Respond with one word only: "Automated" or "Escalated".
         });
   
         const automatedResponse = res.choices[0].message.content.trim().toLowerCase();
-        console.log("automatedResponse",automatedResponse)
+        // console.log("automatedResponse",automatedResponse)
         await submitQueryApi(query,classification,automatedResponse,userData?.id);
          setAnswer(automatedResponse);
          toast.success("Your query has been automatically solved by AI...!")
@@ -201,13 +203,12 @@ Respond with one word only: "Automated" or "Escalated".
         // await submitQueryApi({ queryText: query, classification: "Escalated" });
         setAnswer("Your query has been escalted for review");
         
-        const bpmnDesc = await client.chatCompletion({
+        const bpmnDesc = await client2.chatCompletion({
                   model: "NousResearch/Hermes-3-Llama-3.1-8B",
                   messages: [
                     {
                       role: "user",
-                      content: `
-Role and Objective:
+                      content: `Role and Objective:
 You are an expert in Business Process Modeling (BPMN). Your task is to generate a structured BPMN workflow based on the following user query. The workflow should comprehensively outline the steps needed to resolve the query and follow BPMN best practices.
 
 Output Format:
@@ -251,21 +252,23 @@ Example Output:
     { "sourceRef": 4, "targetRef": 5 }
   ]
 }
-Now, generate the BPMN workflow for the following user description:
+Now, generate the BPMN workflow for the following user query:
 User request: "${query}"
 
 Ensure the output adheres to BPMN best practices and contains a well-structured sequence of tasks, decision points, and workflow elements.
           `
                     },
                   ],
-                  max_tokens: 1500,
+                  max_tokens: 4000,
                 });
           
               const classification = bpmnDesc.choices[0].message.content.trim();
+              
+              // console.log("classificationbpmn",classification);
               const cleanedJson = cleanJsonResponse(classification);
-              console.log("classification",cleanedJson);
+              // console.log("classification",cleanedJson);
               const bpmnXml = await generateBPMNXML(cleanedJson);
-              console.log("bpmnXml",bpmnXml);
+              // console.log("bpmnXml",bpmnXml);
               toast.info("Your query has been escalated to the admin team for review.")
               await createWorkflowApi({bpmnXml,query,userData, name,cleanedJson})
       

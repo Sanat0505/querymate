@@ -1,12 +1,12 @@
 import React from "react";
 import { FaPhoneAlt, FaEnvelope, FaHome } from "react-icons/fa";
-import ImprintModal from "./Modal/ImprintModal";
+import ImprintModal from "../components/Modal/ImprintModal";
 
 function ContactUs() {
   return (
     <div
       id="contact"
-      className="min-h-screen bg-silver_main flex items-center justify-center rounded-lg"
+      className="min-h-screen bg-gray-50 flex items-center justify-center "
     >
       <div className=" w-full p-8">
         <h2 className="lg:text-4xl text-3xl font-bold text-center text-black mb-8">
