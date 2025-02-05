@@ -1,6 +1,5 @@
 import React from "react";
 import { FaPhoneAlt, FaEnvelope, FaHome } from "react-icons/fa";
-import ImprintModal from "../components/Modal/ImprintModal";
 
 function ContactUs() {
   return (
@@ -59,12 +58,12 @@ function ContactUs() {
             ></iframe>
           </div>
         </div>
-        <div className="flex md:flex-row flex-col items-center justify-between text-black text-sm mt-10 md:px-10">
+        {/* <div className="flex md:flex-row flex-col items-center justify-between text-black text-sm mt-10 md:px-10">
           <p>© 2025 TechBlend. All rights reserved.</p>
           <div className="text-semibold">
             <ImprintModal />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

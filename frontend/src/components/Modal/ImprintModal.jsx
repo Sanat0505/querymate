@@ -17,7 +17,7 @@ export default function ImprintModal() {
     <>
       <Button
         onClick={open}
-        className="rounded-md bg-white py-2 px-4 text-sm font-semibold text-black focus:outline-none data-[hover]:bg-black/30 data-[focus]:outline-1 data-[focus]:outline-white"
+        className="rounded-md bg-primary-600 py-2 px-4 text-sm font-semibold text-black focus:outline-none data-[hover]:bg-primary-600/30 data-[focus]:outline-1 data-[focus]:outline-white"
       >
         Imprint
       </Button>
@@ -25,17 +25,17 @@ export default function ImprintModal() {
       <Dialog
         open={isOpen}
         as="div"
-        className="relative z-10 focus:outline-none"
+        className="relative z-10 focus:outline-none rounded-md border-2 border-black"
         onClose={close}
         __demoMode
       >
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="fixed inset-0 z-10 w-screen overflow-y-auto rounded-md border-2 border-black">
           <div className="flex min-h-full items-center justify-center p-4">
             <DialogPanel
               transition
               className="w-full max-w-md rounded-xl bg-white p-6 lg:p-10 duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
             >
-              <DialogTitle className="font-medium text-black">
+              <DialogTitle className="font-medium text-white">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-lg">Imprint</span>
                   {/* <XMarkIcon
@@ -65,7 +65,7 @@ export default function ImprintModal() {
               </div>
               <div className="mt-6">
                 <Button
-                  className="inline-flex items-center gap-2 rounded-md bg-black py-1.5 px-3 text-sm font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                  className="inline-flex items-center gap-2 rounded-md bg-primary-600 py-1.5 px-3 text-sm font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-primary-400 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
                   onClick={close}
                 >
                   Got it, thanks!
