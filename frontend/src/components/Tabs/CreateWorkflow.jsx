@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import BpmnView from "./BpmnView";
 import { HfInference } from "@huggingface/inference";
+import Groq from 'groq-sdk';
 import {generateBPMNXML} from "../../services/generateWorkflows"
 import {setBpmnXml} from "../../store/DataSlice"
 import { toast } from 'react-toastify';
+const groq = new Groq({
+  apiKey: process.env.REACT_APP_GROQ_APIKEY,
+  dangerouslyAllowBrowser: true,
+});
 // import { useDispatch, useSelector } from "react-redux";
 
 const WorkflowCreator = () => {
@@ -40,14 +45,12 @@ const WorkflowCreator = () => {
     // e.preventDefault();
     if (!bpmnDesc.trim()) return;
     
-    const userMessage = { role: "user", content: `Role and Objective:
+    const userMessage = { role: "user", content: `
+      Role and Objective:
 You are an expert in Business Process Modeling (BPMN). Your task is to generate a structured BPMN workflow based on the following user query. The workflow should comprehensively outline the steps needed to resolve the query and follow BPMN best practices.
-
 Output Format:
 The response must be in JSON format with the following structure:
-
 "elements": An array of objects representing BPMN elements, where each object must include:
-
 "type": One of the BPMN element types ("startEvent", "task", "exclusiveGateway", "endEvent", "subProcess").
 "name": A descriptive, human-readable name for the element.
 "taskType": (Required for "task" elements) The task classification:
@@ -57,7 +60,6 @@ The response must be in JSON format with the following structure:
 "outgoing": (must needed for "exclusiveGateway" and "parallelGateway" elements) An array of indices indicating the next possible steps.
 "elements": (For "subProcess" elements) A nested array containing tasks that belong to the subprocess.
 "sequenceFlows": An array representing connections between BPMN elements. Each object must contain:
-
 "sourceRef": Index of the source element in the "elements" array.
 "targetRef": Index of the target element in the "elements" array.
 BPMN Workflow Design Rules:
@@ -85,10 +87,8 @@ Example Output:
   ]
 }
 Now, generate the BPMN workflow for the following user description:
-User request: "${bpmnDesc}"
-
-Ensure the output adheres to BPMN best practices and contains a well-structured sequence of tasks, decision points, and workflow elements.
-          ` };
+User Description: "${bpmnDesc}"
+Ensure the output of BPMN description best practices and contains a well-structured sequence of tasks, decision points, and workflow elements.` };
     setMessages((prev) => [...prev, userMessage]);
     setBpmnDesc("");
     setIsLoading(true);
@@ -120,10 +120,14 @@ Ensure the output adheres to BPMN best practices and contains a well-structured 
     // }
 
     toast.promise(
-      client.chatCompletion({
-        model: "NousResearch/Hermes-3-Llama-3.1-8B",
+      // client.chatCompletion({
+      //   model: "NousResearch/Hermes-3-Llama-3.1-8B",
+      //   messages: [...messages, userMessage],
+      //   max_tokens: 4000,
+      // }),
+      groq.chat.completions.create({
         messages: [...messages, userMessage],
-        max_tokens: 4000,
+        model: 'llama3-8b-8192',
       }),
       {
         pending: "Generating workflow...", // Pending toast message
@@ -131,14 +135,17 @@ Ensure the output adheres to BPMN best practices and contains a well-structured 
         error: "An error occurred while generating the workflow.", // Error toast message
       }
     )
-      .then((chatCompletion) => {
-        const generatedAnswer = chatCompletion.choices[0].message.content.trim();
+      .then((completions) => {
+      //   const generatedAnswer = chatCompletion.choices[0].message.content.trim();
+      //   const cleanedJson = cleanJsonResponse(generatedAnswer); // Clean and parse JSON
+      // const botMessage = { role: "Querymate", content: JSON.stringify(cleanedJson, null, 2) };
+        const generatedAnswer = completions.choices[0]?.message?.content || 'No response';
         const cleanedJson = cleanJsonResponse(generatedAnswer); // Clean and parse JSON
       const botMessage = { role: "Querymate", content: JSON.stringify(cleanedJson, null, 2) };
 
         // const botMessage = { role: "Querymate", content: generatedAnswer };
         
-        console.log("bpmnXml", botMessage.content, generatedAnswer);
+        // console.log("bpmnXml", botMessage.content, generatedAnswer);
         // setMessages((prev) => [...prev, botMessage]);
         // setBotMessage(JSON.parse(botMessage.content));
         // setBpmnXml(generateBPMNXML(JSON.parse(generatedAnswer)));
@@ -217,6 +224,7 @@ Ensure the output adheres to BPMN best practices and contains a well-structured 
     <div className="w-full h-auto lg:h-[88vh] max-h-[88vh] overflow-y-scroll bg-white dark:bg-gray-800 shadow-lg p-6 rounded-lg">
 
       <h1 className="text-center text-2xl font-bold my-4">Workflow Creator</h1>
+      {/* Chatbot implementation */}
       {/* <div className="chat-container min-h-5" style={{ overflowY: "auto", border: "1px solid #ccc", padding: "10px", borderRadius: "4px" }}> */}
         {/* {messages.map((msg, index) => (
           <div key={index} className={`message ${msg.role === "user" ? "user-message" : "bot-message"}`}>
@@ -238,9 +246,7 @@ Ensure the output adheres to BPMN best practices and contains a well-structured 
           type="submit"
           onClick={userClick}
           className="mt-4 w-full bg-primary-600 text-white hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-800 rounded-lg py-2 text-center"
-          // disabled={isLoading} // Disable button while loading
         >
-          {/* {isLoading ? "Loading..." : "Submit"} */}
           Generate Workflow
         </button>
 <div

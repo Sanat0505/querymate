@@ -8,7 +8,8 @@ import ActiveWorkflows from '../components/Tabs/ActiveWorkflows';
 import Tasks from '../components/Tabs/TaskTab';
 import DeployedWorkflows from '../components/Tabs/DeployedWorkflows';
 import WorkflowCreator from '../components/Tabs/CreateWorkflow';
-import Avatar, { genConfig } from "react-nice-avatar";
+// import Avatar, { genConfig } from "react-nice-avatar";
+import { FaUser } from "react-icons/fa";
 import { getWorkflowsApi,getTasksApi, getUsersApi } from "../services/api";
 
 
@@ -114,9 +115,11 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <div className="w-full lg:w-3/4 lg:pl-8">
-        <div className="flex justify-end mb-4 bg-primary-500 rounded-full hover:cursor-pointer">
-        <Avatar style={{ width: 36, height: 36, margin: "0 0" }} config={genConfig({ sex: "man", hairStyle: "mohawk" })} />
-
+        <div className="flex justify-end mb-4 bg-primary-500 rounded-lg ">
+        {/* <Avatar style={{ width: 36, height: 36, margin: "0 0" }} config={genConfig({ sex: "man", hairStyle: "mohawk" })} /> */}
+        <div className="bg-primary-500 text-white p-2 rounded-full text-2xl hover:cursor-pointer">
+              <FaUser />
+            </div>
         </div>
 
         {activeTab === 'user-management' && <UserManagement users={users} setUsers={setUsers}/>}
