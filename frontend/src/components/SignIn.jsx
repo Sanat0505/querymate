@@ -23,12 +23,15 @@ const SignIn = () => {
     try {
       // Call the API to sign in
       const response = await signInApi(formData); 
-      
+      console.log("response", response.user)
       if (response.token) {
         // Save the token to localStorage 
         localStorage.setItem("authToken", response.token);
         toast.success("Welcome to Querymate..!");
-
+        if(response.user.email === "team.techblend@gmail.com"){
+          navigate("/admin-dashboard");
+          return;
+        }
         // Redirect the user to the dashboard
         navigate("/dashboard");
       } else {

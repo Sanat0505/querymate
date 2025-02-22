@@ -7,3 +7,48 @@ The purpose of this project is to automate the synchronization of the code from 
 Sanat Kakadiya (This is username from which I was pushing the code from my private github repo. to GitLab Repo.) -> Sanatkumar Hareshbhai Kakadiya@sakak-at-tu-chemnitz.de
 Arun and Anushka Jajal -> Anushka Naineshbhai Jajal
 @jajal-at-tu-chemnitz.de
+
+---
+
+Team website - where you can see our team information.
+https://team-techblend.vercel.app/
+
+---
+
+Live version of QUERYMATE is deployed on vercel
+How can I access Querymate??
+--> Our product is deployed in vercel. so you can directly access from link :
+
+https://tb-querymate.vercel.app/
+
+---
+
+How to run QUERYMATE?? (DOCKER IMAGE)
+just run below two commands
+
+1. docker pull tecblend/querymate
+2. docker run -p 3000:3000 tecblend/querymate
+
+It will run Querymate on the port 3000 in your pc. Go to the http://localhost:3000/
+
+----------------------------------------OR--------------------------------------
+
+Clone the project in your pc.
+There are three directories in GitLab, frontend,backend and team-website.
+go to the frontend directory by command cd and run below command.
+
+docker run -p 3000:3000 querymate
+
+it will run into our local machine on the port 3000.
+
+How to Use QUERYMATE??
+
+For users : create a account if you don't have and just login with credentials and it will be redirect to "user dashboard". Now ask queries and get the answers.
+
+For admins : There are saperate credentials for admins
+email: team.techblend@gmail.com
+Password: Techblend@123
+
+sign in with this credantials and you will be redirect on "admin-dashboard".
+
+In admin-dashboard, you can see the active workflows of user queries.

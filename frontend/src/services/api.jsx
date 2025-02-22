@@ -49,7 +49,7 @@ export const signInApi = async (formData) => {
     const response = await apiClient.post("/querymate/auth/login", formData);
 
     // Log the response data for debugging
-    console.log("SignIn Response:", response.data);
+    // console.log("SignIn Response:", response.data);
 
     if (response.data) {
       const { token, user } = response.data;
@@ -58,7 +58,7 @@ export const signInApi = async (formData) => {
       localStorage.setItem("token", token); // Save JWT token
       localStorage.setItem("user", JSON.stringify(user)); // Save user details
 
-      console.log("Login successful. User and token stored in localStorage.");
+      // console.log("Login successful. User and token stored in localStorage.");
     } else {
       throw new Error("Login failed. No data returned from server.");
     }

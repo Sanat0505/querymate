@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 const Settings = () => {
   // State for settings form
   const [profile, setProfile] = useState({
-    name: 'Sanat Kakadiya',
-    email: 'sanatkakdiya@gmial.com',
+    name: 'Techblend',
+    email: 'team.techblend@gmail.com',
     password: '',
   });
 
